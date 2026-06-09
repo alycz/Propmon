@@ -49,9 +49,11 @@ export const demoConfig = demoConfigJson;
 export const accountStates = ["NONE", "EXAMINATION", "PASSED", "FUNDED", "FAILED", "PAYOUT"] as const;
 
 export const tierOptions = [
-  {label: "$10,000", accountSize: 10_000_000_000n},
-  {label: "$25,000", accountSize: 25_000_000_000n},
-  {label: "$50,000", accountSize: 50_000_000_000n}
+  {label: "Bronze — $5,000", accountSize: 5_000_000_000n, examFee: 50},
+  {label: "Silver — $10,000", accountSize: 10_000_000_000n, examFee: 100},
+  {label: "Gold — $25,000", accountSize: 25_000_000_000n, examFee: 250},
+  {label: "Platinum — $50,000", accountSize: 50_000_000_000n, examFee: 500},
+  {label: "Diamond — $100,000", accountSize: 100_000_000_000n, examFee: 1000}
 ];
 
 export function parseMode(value: string | null | undefined): PropmonMode {
