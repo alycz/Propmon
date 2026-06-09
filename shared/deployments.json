@@ -1,0 +1,9 @@
+{
+  "network": "monadTestnet",
+  "chainId": 10143,
+  "accountRegistry": null,
+  "ruleEngine": null,
+  "perplPriceAdapter": null,
+  "examinationVault": null,
+  "fundedVault": null
+}

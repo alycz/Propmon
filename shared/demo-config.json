@@ -1,0 +1,30 @@
+{
+  "mode": "demo",
+  "seed": "proprietaryx-monad-blitz-demo-v1",
+  "timerCompressionFactor": 12,
+  "priceSeries": {
+    "source": "seeded-deterministic",
+    "baseMarket": "MON",
+    "markets": {
+      "BTC": { "startPrice": 61400.0, "driftBpsPerStep": 18, "volatilityBps": 12 },
+      "ETH": { "startPrice": 1642.0, "driftBpsPerStep": 20, "volatilityBps": 10 },
+      "SOL": { "startPrice": 64.9, "driftBpsPerStep": 16, "volatilityBps": 8 },
+      "MON": { "startPrice": 0.0208, "driftBpsPerStep": 35, "volatilityBps": 18 },
+      "ZEC": { "startPrice": 461.9, "driftBpsPerStep": 14, "volatilityBps": 12 }
+    }
+  },
+  "scriptedPass": {
+    "accountSize": "10000000000",
+    "profitTargetBps": 1000,
+    "entries": [
+      { "market": "MON", "side": "LONG", "sizeDelta": "250000", "collateral": "250000000", "step": 1 },
+      { "market": "MON", "side": "LONG", "sizeDelta": "125000", "collateral": "125000000", "step": 3 },
+      { "market": "MON", "side": "SHORT", "sizeDelta": "-375000", "collateral": "0", "step": 8 }
+    ]
+  },
+  "fundedDemo": {
+    "label": "DEMO FILL",
+    "profitSplitBps": { "trader": 8000, "protocol": 2000 },
+    "settlementSource": "PerplPriceAdapter"
+  }
+}
