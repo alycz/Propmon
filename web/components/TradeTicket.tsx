@@ -63,7 +63,7 @@ export function TradeTicket() {
 
       <div className="ticketDivider">
         <span>Funded execution</span>
-        {isFunded ? <span className="pill pos">FUNDED</span> : <span className="pill muted">state must be FUNDED</span>}
+        {isFunded ? <span className="pill pos">FUNDED</span> : null}
       </div>
       <button
         className="secondary full"

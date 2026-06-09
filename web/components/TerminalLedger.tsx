@@ -11,8 +11,7 @@ export function TerminalLedger() {
   return (
     <div className="panel densePanel">
       <div className="densePanelHead">
-        <p className="eyebrow">Verify</p>
-        <h2>On-chain Ledger</h2>
+        <h2>Transactions</h2>
       </div>
       <div className="ledgerTable">
         <div className="ledgerHead">

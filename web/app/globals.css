@@ -497,6 +497,26 @@ a:hover {
   white-space: nowrap;
 }
 
+/* "Buy an examination" CTA: solid purple button with black text that routes to
+   the Profile page where examinations are actually purchased. */
+.buyExamBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 18px;
+  color: #000;
+  background: #836ef9;
+  border: 1px solid #836ef9;
+  border-radius: 0;
+}
+
+.buyExamBtn:hover {
+  text-decoration: none;
+  background: #9a89fa;
+  border-color: #9a89fa;
+}
+
 /* ---------- Execution panel (Human / Agentic) ---------- */
 .execPanel {
   display: flex;
@@ -523,6 +543,9 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  /* Matched with .bookHead so the Order Book and Execution titles share the
+     exact same header height and font size across the terminal. */
+  min-height: 51px;
   padding: 10px 12px;
   border-bottom: 1px solid #1c252e;
 }
@@ -858,7 +881,11 @@ a:hover {
 
 .terminalBottom {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  /* Mirror the top row's column split so the bottom panels line up with the
+     cells above: the ledger ("Transactions") spans the market + chart width,
+     and the funded-events panel spans the order book + execution width
+     (248px book + 1px hairline + 300px execution = 549px). */
+  grid-template-columns: minmax(0, 1fr) 549px;
   gap: 1px;
   background: transparent;
 }
@@ -1052,6 +1079,8 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Same height as .execHead so the two column titles line up exactly. */
+  min-height: 51px;
   padding: 10px 12px;
   border-bottom: 1px solid #1c252e;
 }
@@ -1485,22 +1514,48 @@ a:hover {
 
 .agentSignerBox {
   display: grid;
-  gap: 6px;
+  /* Clear vertical rhythm between the label, the connected API line, and the
+     authorization status so the three rows don't run together. */
+  gap: 8px;
   border: 1px solid #1c252e;
   border-radius: 0;
-  padding: 12px;
+  padding: 14px;
   background: #0d1116;
 }
 
 .agentSignerBox span,
 .agentSignerBox small {
   color: #8a949e;
+  font-size: 12px;
 }
 
 .agentSignerBox a,
 .agentSignerBox strong {
   color: #f5f7fa;
-  font-size: 18px;
+  font-size: 16px;
+}
+
+/* Compact authorization status row — the default .metric box (82px tall) made
+   the "Authorized" button and "Status" tile look oversized, so cap their
+   height and lay the status out as a single inline line. */
+.authActions {
+  align-items: stretch;
+}
+
+.authActions .primary {
+  min-height: 40px;
+}
+
+.authActions .authStatus {
+  min-height: 40px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+}
+
+.authActions .authStatus strong {
+  font-size: 14px;
 }
 
 .marketStrip {

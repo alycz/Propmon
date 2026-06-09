@@ -11,7 +11,7 @@ export function ExamGateBanner() {
     return (
       <div className="gateBanner buy">
         <span>You need an examination account first. Buy one to begin your evaluation.</span>
-        <a className="gateBannerCta" href="#tiers">Buy an examination</a>
+        <Link className="gateBannerCta buyExamBtn" href={`/profile?${query}#tiers`}>Buy an examination</Link>
       </div>
     );
   }
@@ -20,7 +20,7 @@ export function ExamGateBanner() {
     return (
       <div className="gateBanner fail">
         <span>This examination failed. Buy a new examination to try again.</span>
-        <a className="gateBannerCta" href="#tiers">Buy a new examination</a>
+        <Link className="gateBannerCta buyExamBtn" href={`/profile?${query}#tiers`}>Buy a new examination</Link>
       </div>
     );
   }
