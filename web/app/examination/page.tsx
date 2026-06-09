@@ -4,7 +4,6 @@ import {AppShell} from "../../components/AppShell";
 import {ExamGateBanner} from "../../components/ExamGateBanner";
 import {AgentAuthorizationPanel} from "../../components/AgentAuthorizationPanel";
 import {ChallengeProgress} from "../../components/ChallengeProgress";
-import {DemoScriptPanel} from "../../components/DemoScriptPanel";
 import {ExaminationLedger} from "../../components/ExaminationLedger";
 import {ExaminationOverview} from "../../components/ExaminationOverview";
 import {RuleStatusPanel} from "../../components/RuleStatusPanel";
@@ -25,10 +24,7 @@ export default function ExaminationPage() {
 
       <section className="grid two">
         <RuleStatusPanel />
-        <div className="grid">
-          <AgentAuthorizationPanel />
-          <DemoScriptPanel />
-        </div>
+        <AgentAuthorizationPanel />
       </section>
 
       <ExaminationLedger />

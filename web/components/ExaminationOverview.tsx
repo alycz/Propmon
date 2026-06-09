@@ -58,7 +58,7 @@ export function ExaminationOverview() {
         ) : stateLabel === "PAYOUT" ? (
           <Link className="primary cta" href={`/terminal?${query}`}>View Payout</Link>
         ) : (
-          <a className="primary cta" href="#tiers">{stateLabel === "FAILED" ? "Buy New Exam" : "Buy Exam"}</a>
+          <Link className="primary cta" href={`/profile?${query}#tiers`}>{stateLabel === "FAILED" ? "Buy New Exam" : "Buy Exam"}</Link>
         )}
       </div>
     </section>

@@ -11,17 +11,21 @@ type Props = {
   primaryLabel?: string;
   primaryHref?: string;
   onPrimary?: () => void;
+  /** Show the padlock glyph in the header. Defaults to true (gating dialogs). */
+  lock?: boolean;
 };
 
-export function Modal({open, title, children, onClose, primaryLabel, primaryHref, onPrimary}: Props) {
+export function Modal({open, title, children, onClose, primaryLabel, primaryHref, onPrimary, lock = true}: Props) {
   if (!open) return null;
   return (
     <div className="modalOverlay" onClick={onClose} role="presentation">
       <div className="modalCard" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-label={title}>
         <div className="modalHead">
-          <span className="modalLock" aria-hidden>
-            <LockGlyph />
-          </span>
+          {lock && (
+            <span className="modalLock" aria-hidden>
+              <LockGlyph />
+            </span>
+          )}
           <h2>{title}</h2>
         </div>
         <div className="modalBody">{children}</div>

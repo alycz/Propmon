@@ -30,6 +30,7 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
   const markersApiRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null);
   const markersRef = useRef<SeriesMarker<Time>[]>([]);
   const lastTickRef = useRef(0);
+  const didFitRef = useRef(false);
 
   // Create the chart once; lightweight-charts touches the DOM/window so this only
   // runs client-side (the wrapper loads this module with ssr:false).
@@ -50,11 +51,22 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
         vertLines: {color: "#141b21"},
         horzLines: {color: "#141b21"}
       },
-      rightPriceScale: {borderColor: "#1c252e"},
+      rightPriceScale: {borderColor: "#1c252e", autoScale: true},
       timeScale: {borderColor: "#1c252e", timeVisible: true, secondsVisible: false},
       crosshair: {mode: CrosshairMode.Normal},
-      handleScale: false,
-      handleScroll: false
+      // Full interaction: wheel/pinch zoom on both axes, drag-to-scroll, and
+      // drag the price axis to rescale the y-range manually.
+      handleScale: {
+        axisPressedMouseMove: {time: true, price: true},
+        mouseWheel: true,
+        pinch: true
+      },
+      handleScroll: {
+        mouseWheel: true,
+        pressedMouseMove: true,
+        horzTouchDrag: true,
+        vertTouchDrag: true
+      }
     });
 
     const precision = Math.max(0, Math.min(8, decimals));
@@ -87,6 +99,7 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
       markersApiRef.current = null;
       markersRef.current = [];
       lastTickRef.current = 0;
+      didFitRef.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, decimals]);
@@ -101,7 +114,13 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
       .filter((point) => Number.isFinite(point.value))
       .map((point) => ({time: Math.floor(point.time) as UTCTimestamp, value: point.value}));
     areaSeries.setData(data);
-    chartRef.current?.timeScale().fitContent();
+    // Only auto-fit on the first data load. Afterwards the viewport is left
+    // alone so the user's manual zoom / pan / y-axis scaling sticks as ticks
+    // stream in.
+    if (!didFitRef.current && data.length > 0) {
+      chartRef.current?.timeScale().fitContent();
+      didFitRef.current = true;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signature]);
 

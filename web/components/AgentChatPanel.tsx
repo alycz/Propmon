@@ -63,19 +63,19 @@ export function AgentChatPanel({surface}: {surface: SurfaceKind}) {
   }
 
   const deployed = phase === "deployed";
-  const pill = deployed ? "Agent active — market making (demo)" : "Demo agent connected";
 
   return (
     <div className="agentChat">
       <div className="agentChatHead">
         <div className="agentChatTitle">
           <strong>Agentic Trading</strong>
-          <span className="agentChatSub">connect your agent</span>
         </div>
-        <span className={`agentPill ${deployed ? "live" : ""}`}>
-          <span className="agentPillDot" />
-          {pill}
-        </span>
+        {!deployed && (
+          <span className="agentPill">
+            <span className="agentPillDot" />
+            Demo agent connected
+          </span>
+        )}
       </div>
 
       <div className="agentThread" ref={threadRef}>

@@ -5,6 +5,8 @@ import {useState} from "react";
 import {examinationVaultAbi} from "../lib/abi";
 import {tierOptions} from "../lib/config";
 import {formatQuote, shortHash, txUrl} from "../lib/format";
+import {useAgentDemo} from "./AgentDemoProvider";
+import {Modal} from "./Modal";
 import {Panel} from "./ui";
 import {usePropmon} from "./PropmonProvider";
 
@@ -13,10 +15,22 @@ export function TierSelector() {
   const {ready, isConnected, onWrongChain, examinationAddress, accountIdInput, setAccountIdInput, mode} = core;
   const isDemo = mode === "demo";
   const {writeContractAsync, submit, writePending, receiptPending, lastHash, lastAction, actionError} = actions;
+  const {simulateState} = useAgentDemo();
 
   const [selectedTier, setSelectedTier] = useState(0);
+  const [congrats, setCongrats] = useState(false);
   const selectedTierData = tierOptions[selectedTier] ?? tierOptions[0];
   const expectedFee = (selectedTierData.accountSize * 100n) / 10_000n;
+
+  // Demo buy: optimistically open an examination account and celebrate, then
+  // route the trader to the Examination page to start demo funding & trading.
+  function buyDemoExamination() {
+    if (!accountIdInput) setAccountIdInput("1");
+    simulateState("EXAMINATION");
+    setCongrats(true);
+  }
+
+  const examQuery = `mode=${mode}&account=${accountIdInput || "1"}`;
 
   return (
     <Panel title="Buy Examination" eyebrow="Choose your challenge tier" className="anchorPanel">
@@ -31,8 +45,12 @@ export function TierSelector() {
       </div>
       <button
         className="primary"
-        disabled={!ready || !isConnected || onWrongChain || writePending}
-        onClick={() =>
+        disabled={writePending || (!isDemo && (!ready || !isConnected || onWrongChain))}
+        onClick={() => {
+          if (isDemo) {
+            buyDemoExamination();
+            return;
+          }
           submit("Buy examination", () =>
             writeContractAsync({
               address: examinationAddress,
@@ -41,8 +59,8 @@ export function TierSelector() {
               args: [selectedTierData.accountSize],
               value: expectedFee
             })
-          )
-        }
+          );
+        }}
       >
         Buy Examination — {formatQuote(selectedTierData.examFee, true)}
       </button>
@@ -63,6 +81,20 @@ export function TierSelector() {
         </p>
       )}
       {actionError && <p className="errorText">{actionError}</p>}
+
+      <Modal
+        open={congrats}
+        lock={false}
+        title="🎉 Congrats — examination purchased!"
+        onClose={() => setCongrats(false)}
+        primaryLabel="Go to Examination"
+        primaryHref={`/examination?${examQuery}`}
+      >
+        <p>
+          Your {selectedTierData.label.split(" — ")[0]} examination account is ready. Head to the Examination page to
+          start demo funding and demo trading.
+        </p>
+      </Modal>
     </Panel>
   );
 }

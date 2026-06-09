@@ -8,15 +8,14 @@ import {usePropmon} from "./PropmonProvider";
 
 export function FundedEventsPanel() {
   const {core, account, actions, events} = usePropmon();
-  const {ready, accountId, address, fundedAddress, mode} = core;
+  const {ready, accountId, address, fundedAddress} = core;
   const {stateLabel, funded} = account;
   const {writeContractAsync, submit, writePending} = actions;
 
   return (
     <div className="panel densePanel">
       <div className="densePanelHead">
-        <p className="eyebrow">{mode === "demo" ? events.demoFundedLabel : "Live intent + fallback"}</p>
-        <h2>Funded Events</h2>
+        <h2>Fund Events</h2>
       </div>
 
       <div className="metricRow">

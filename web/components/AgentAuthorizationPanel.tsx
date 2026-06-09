@@ -22,7 +22,7 @@ export function AgentAuthorizationPanel() {
         <strong className="accent-pos">OpenAI API is connected</strong>
         <small className="accent-pos">Authorized to trade</small>
       </div>
-      <div className="buttonRow">
+      <div className="buttonRow authActions">
         <button
           className="primary"
           disabled={authorized || writePending || !ready || !accountId || !isAddress(agentSigner)}
@@ -34,7 +34,7 @@ export function AgentAuthorizationPanel() {
         >
           Authorized
         </button>
-        <div className="metric">
+        <div className="metric authStatus">
           <span>Status</span>
           <strong className="accent-pos">Authorized</strong>
         </div>
