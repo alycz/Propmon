@@ -1,8 +1,8 @@
 :root {
   color-scheme: dark;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #101214;
-  color: #f4f1ea;
+  background: #0d1012;
+  color: #f6f2e8;
 }
 
 * {
@@ -12,87 +12,425 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #101214 0%, #1c2420 48%, #2b211a 100%);
+  background: #0d1012;
 }
 
-.shell {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 24px;
+button,
+input,
+select {
+  font: inherit;
 }
 
-.panel {
-  width: min(880px, 100%);
-  border: 1px solid rgba(244, 241, 234, 0.18);
-  border-radius: 8px;
-  padding: 32px;
-  background: rgba(16, 18, 20, 0.72);
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+a {
+  color: #8fd7ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.appShell {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 22px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.topbar h1,
+.panel h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.topbar h1 {
+  font-size: 42px;
+  line-height: 1;
+}
+
+.panel h2 {
+  font-size: 20px;
 }
 
 .eyebrow {
-  margin: 0 0 12px;
-  color: #72d391;
-  font-size: 13px;
+  margin: 0 0 8px;
+  color: #82e2a8;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0;
 }
 
-h1 {
-  margin: 0;
-  font-size: 48px;
-  line-height: 1;
-  letter-spacing: 0;
-}
-
-.lede {
-  margin: 18px 0 28px;
-  max-width: 680px;
-  color: #cfc8bc;
-  font-size: 18px;
-  line-height: 1.5;
-}
-
-.statusGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.topActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
-.statusGrid div {
-  border: 1px solid rgba(244, 241, 234, 0.14);
+.modeToggle {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 188px;
+  border: 1px solid #344148;
   border-radius: 8px;
-  padding: 16px;
+  background: #14191d;
+  overflow: hidden;
+}
+
+.modeToggle button {
+  height: 42px;
+  border: 0;
+  color: #aeb9bd;
+  background: transparent;
+  font-weight: 800;
+}
+
+.modeToggle button.active {
+  color: #111715;
+  background: #82e2a8;
+}
+
+.banner,
+.notice {
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-weight: 700;
+}
+
+.banner {
+  color: #141007;
+  background: #ffd166;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #4e5b60;
+  color: #f6f2e8;
+  background: #182025;
+}
+
+.notice button,
+.primary,
+.secondary {
+  min-height: 42px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0 14px;
+  font-weight: 800;
+}
+
+.primary {
+  width: 100%;
+  color: #0b1113;
+  background: #82e2a8;
+}
+
+.secondary,
+.notice button {
+  color: #f6f2e8;
+  border-color: #3a484f;
+  background: #182126;
+}
+
+.marketStrip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.marketPill {
+  display: grid;
+  gap: 4px;
   min-height: 88px;
+  text-align: left;
+  border: 1px solid #2d383e;
+  border-radius: 8px;
+  padding: 12px;
+  color: #dce3df;
+  background: #13181c;
 }
 
-.statusGrid span,
-.statusGrid strong {
-  display: block;
+.marketPill.active {
+  border-color: #82e2a8;
+  background: #17231d;
 }
 
-.statusGrid span {
-  color: #9ca3a4;
+.marketPill span,
+.field span,
+.metric span,
+.ledgerRow span,
+.timelineItem span,
+.helper,
+.scriptList,
+.marketPill small {
+  color: #a9b4b7;
+}
+
+.marketPill strong {
+  color: #f6f2e8;
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboardGrid {
+  grid-template-columns: 1.05fr 0.95fr 1.2fr;
+}
+
+.panel {
+  min-width: 0;
+  border: 1px solid #263239;
+  border-radius: 8px;
+  padding: 18px;
+  background: #12171b;
+}
+
+.tierGrid,
+.metricRow,
+.buttonRow,
+.ruleGrid,
+.tradeGrid {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.tierGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metricRow,
+.buttonRow {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ruleGrid,
+.tradeGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tradeGrid.compact {
+  margin-bottom: 0;
+}
+
+.tier,
+.metric {
+  min-height: 82px;
+  border: 1px solid #2d383e;
+  border-radius: 8px;
+  padding: 12px;
+  color: #f6f2e8;
+  background: #171d21;
+}
+
+.tier {
+  display: grid;
+  gap: 8px;
+  text-align: left;
+}
+
+.tier.active {
+  border-color: #82e2a8;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.metric strong {
+  color: #f6f2e8;
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #344148;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #f6f2e8;
+  background: #0e1316;
+}
+
+.helper {
+  margin: 12px 0 0;
   font-size: 13px;
+  line-height: 1.45;
+}
+
+.errorText {
+  margin: 12px 0 0;
+  color: #ff8a8a;
+  font-weight: 800;
+}
+
+.meter {
+  margin: 16px 0;
+}
+
+.meterLabel {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
   margin-bottom: 8px;
 }
 
-.statusGrid strong {
-  color: #f4f1ea;
-  font-size: 15px;
-  line-height: 1.35;
+.meterTrack {
+  height: 18px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #222a2f;
+}
+
+.meterTrack div {
+  height: 100%;
+  min-width: 8px;
+  border-radius: inherit;
+  transition: width 220ms ease;
+}
+
+.meter.safe .meterTrack div {
+  background: #82e2a8;
+}
+
+.meter.warning .meterTrack div {
+  background: #ffd166;
+}
+
+.meter.breach .meterTrack div {
+  background: #ff6262;
+}
+
+.ledger,
+.timeline {
+  display: grid;
+  gap: 10px;
+  max-height: 390px;
+  overflow: auto;
+  margin-top: 12px;
+}
+
+.ledgerRow,
+.timelineItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #28343a;
+  border-radius: 8px;
+  padding: 12px;
+  background: #171d21;
+}
+
+.ledgerRow > div,
+.timelineItem {
+  display: grid;
+  gap: 4px;
+}
+
+.ledgerRow > div:last-child {
+  text-align: right;
+}
+
+.scriptList {
+  margin: 12px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #a9b4b7;
+  font-size: 13px;
+  padding: 12px 0 4px;
+}
+
+@media (max-width: 1050px) {
+  .marketStrip,
+  .dashboardGrid,
+  .grid.two {
+    grid-template-columns: 1fr;
+  }
+
+  .marketStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
-  .panel {
-    padding: 24px;
+  .appShell {
+    padding: 14px;
   }
 
-  h1 {
-    font-size: 38px;
+  .topbar,
+  .notice,
+  .footer {
+    align-items: stretch;
+    flex-direction: column;
   }
 
-  .statusGrid {
+  .topActions,
+  .buttonRow,
+  .metricRow,
+  .ruleGrid,
+  .tradeGrid,
+  .tierGrid,
+  .marketStrip {
     grid-template-columns: 1fr;
+  }
+
+  .topActions {
+    justify-content: flex-start;
+  }
+
+  .modeToggle {
+    width: 100%;
+  }
+
+  .topbar h1 {
+    font-size: 34px;
   }
 }
