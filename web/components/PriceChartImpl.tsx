@@ -6,7 +6,6 @@ import {
   CrosshairMode,
   LineStyle,
   createChart,
-  createSeriesMarkers,
   type IChartApi,
   type IPriceLine,
   type ISeriesApi,
@@ -18,8 +17,6 @@ import {
 import {useEffect, useRef} from "react";
 
 import type {PriceChartProps} from "./PriceChart";
-
-const MAX_MARKERS = 12;
 
 export default function PriceChartImpl({series, symbol, height = 320, decimals = 2, marketMaking}: PriceChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -168,24 +165,11 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
       title: "ASK"
     });
 
-    if (markTime !== undefined && mmTick > lastTickRef.current) {
-      lastTickRef.current = mmTick;
-      const isAsk = mmTick % 2 === 0;
-      const marker: SeriesMarker<Time> = {
-        time: Math.floor(markTime) as UTCTimestamp,
-        position: isAsk ? "aboveBar" : "belowBar",
-        color: isAsk ? "#ff6262" : "#836ef9",
-        shape: "circle",
-        size: 0.6
-      };
-      markersRef.current = [...markersRef.current, marker].slice(-MAX_MARKERS);
-    }
-
-    if (!markersApiRef.current) {
-      markersApiRef.current = createSeriesMarkers(s, markersRef.current);
-    } else {
-      markersApiRef.current.setMarkers(markersRef.current);
-    }
+    // Fill markers (purple/red dots) intentionally omitted — only the
+    // BID/ASK quote lines are rendered for the market-making overlay.
+    lastTickRef.current = mmTick;
+    markersRef.current = [];
+    markersApiRef.current?.setMarkers([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mmActive, mmTick, mark, markTime, mmSpread]);
 
