@@ -326,6 +326,206 @@ a:hover {
   color: #8a949e;
 }
 
+/* ---------- Gating: nav lock, modal, demo controls, banners ---------- */
+.topnavLink.locked {
+  color: #6b757c;
+  background: #0c1014;
+  border-color: #161d23;
+  gap: 6px;
+}
+
+.topnavLink.locked:hover {
+  color: #8a949e;
+}
+
+.navLock {
+  display: inline-flex;
+  color: #6b757c;
+}
+
+.topnavLink.unlocked {
+  border-color: #1d3a2a;
+  box-shadow: inset 0 0 0 1px #1d3a2a;
+}
+
+.guardedInert {
+  filter: blur(2px) saturate(0.7);
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(4, 6, 8, 0.72);
+  backdrop-filter: blur(2px);
+}
+
+.modalCard {
+  width: min(440px, 100%);
+  border: 1px solid #1c252e;
+  border-radius: 4px;
+  background: #0d1116;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.modalLock {
+  display: inline-flex;
+  color: #ffd166;
+}
+
+.modalHead h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #f5f7fa;
+}
+
+.modalBody {
+  padding: 16px;
+  color: #c7d0d6;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.modalBody p {
+  margin: 0;
+}
+
+.modalActions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.modalActions .primary {
+  width: auto;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.modalActions .primary:hover {
+  text-decoration: none;
+}
+
+.modalActions .secondary {
+  flex: 0 0 auto;
+}
+
+.demoControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px dashed #4a4322;
+  border-radius: 3px;
+  background: #16140c;
+}
+
+.demoControlsTag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #0b1113;
+  background: #ffd166;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.demoControlsLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a949e;
+}
+
+.demoControlsBtns {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.demoStep {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid #1c252e;
+  border-radius: 2px;
+  background: #11171c;
+  color: #8a949e;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.demoStep.active {
+  color: #0b1113;
+  background: #ffd166;
+  border-color: #ffd166;
+}
+
+.demoStep.clear {
+  color: #8fd7ff;
+}
+
+.demoControlsNote {
+  font-size: 11px;
+  color: #8a949e;
+  margin-left: auto;
+}
+
+.gateBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 11px 14px;
+  border: 1px solid #1c252e;
+  border-radius: 3px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
+.gateBanner.buy {
+  border-color: #4a4322;
+  background: #16140c;
+  color: #ffd166;
+}
+
+.gateBanner.fail {
+  border-color: #4a2424;
+  background: #160c0c;
+  color: #ff9a9a;
+}
+
+.gateBanner.pass {
+  border-color: #1d3a2a;
+  background: #0c1612;
+  color: #82e2a8;
+}
+
+.gateBannerCta {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 /* ---------- Execution panel (Human / Agentic) ---------- */
 .execPanel {
   display: flex;

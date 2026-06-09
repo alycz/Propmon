@@ -3,6 +3,7 @@
 import {type ReactNode} from "react";
 
 import {errorMessage} from "../lib/format";
+import {DemoControls} from "./DemoControls";
 import {ModeToggle} from "./ModeToggle";
 import {usePropmon} from "./PropmonProvider";
 import {StatusStrip} from "./StatusStrip";
@@ -63,6 +64,8 @@ export function AppShell({children, statusStrip = true}: Props) {
       )}
 
       {statusStrip && <StatusStrip />}
+
+      <DemoControls />
 
       {children}
     </main>
