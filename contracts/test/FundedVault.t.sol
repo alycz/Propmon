@@ -102,10 +102,47 @@ contract FundedMockPriceAdapter is IPerplPriceAdapter {
 contract FundedMockRuleEngine is IRuleEngine {
     bool public checkOk = true;
     string public checkReason = "";
+    uint256 public configuredAccountId;
+    uint256 public configuredTierId;
+    address public configuredAccountView;
 
     function setCheck(bool ok, string memory reason) external {
         checkOk = ok;
         checkReason = reason;
+    }
+
+    function configureAccount(uint256 accountId, uint256 tierId, address accountView) external {
+        configuredAccountId = accountId;
+        configuredTierId = tierId;
+        configuredAccountView = accountView;
+    }
+
+    function setRuleSet(uint256, RuleSet calldata) external {}
+
+    function getRuleSetForTier(uint256) external pure returns (RuleSet memory) {
+        return RuleSet({
+            profitTargetBps: 0,
+            maxDailyDrawdownBps: 0,
+            maxTotalDrawdownBps: 0,
+            maxLeverageX: 0,
+            maxNotional: 0,
+            maxOpenPositions: 0
+        });
+    }
+
+    function getRuleSetForAccount(uint256) external pure returns (RuleSet memory) {
+        return RuleSet({
+            profitTargetBps: 0,
+            maxDailyDrawdownBps: 0,
+            maxTotalDrawdownBps: 0,
+            maxLeverageX: 0,
+            maxNotional: 0,
+            maxOpenPositions: 0
+        });
+    }
+
+    function checkTradeDetailed(TradeCheckInput calldata) external view returns (bool ok, string memory reason) {
+        return (checkOk, checkReason);
     }
 
     function checkTrade(uint256, int256, uint256, uint256) external view returns (bool ok, string memory reason) {
