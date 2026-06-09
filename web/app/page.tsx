@@ -1,32 +1,10 @@
 "use client";
 
-import {Suspense, useEffect, useMemo, useState} from "react";
-import {decodeEventLog, isAddress, zeroAddress, type Address, type Hex} from "viem";
-import {
-  useBlockNumber,
-  usePublicClient,
-  useReadContract,
-  useReadContracts,
-  useWaitForTransactionReceipt,
-  useWatchContractEvent,
-  useWriteContract
-} from "wagmi";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {useState} from "react";
+import {isAddress, type Address, type Hex} from "viem";
 
-import {accountRegistryAbi, examinationVaultAbi, fundedVaultAbi, priceAdapterAbi} from "../lib/abi";
-import {
-  accountStates,
-  contractsReady,
-  defaultMarket,
-  demoConfig,
-  getContractAddresses,
-  marketById,
-  markets,
-  MONAD_TESTNET_CHAIN_ID,
-  parseMode,
-  tierOptions,
-  type PropmonMode
-} from "../lib/config";
+import {accountRegistryAbi, examinationVaultAbi, fundedVaultAbi} from "../lib/abi";
+import {demoConfig, marketById, markets, tierOptions} from "../lib/config";
 import {
   addressUrl,
   errorMessage,
@@ -39,339 +17,51 @@ import {
   shortHash,
   txUrl
 } from "../lib/format";
-import {usePropmonWallet} from "../lib/use-propmon-wallet";
-
-type LedgerRow = {
-  key: string;
-  marketId: bigint;
-  sizeDelta: bigint;
-  markPrice: bigint;
-  equityAfter?: bigint;
-  timestamp?: bigint;
-  hash?: Hex;
-};
-
-type FundedEvent = {
-  key: string;
-  label: string;
-  detail: string;
-  hash?: Hex;
-};
+import {usePropmon} from "../components/PropmonProvider";
 
 const sideOptions = [
   {label: "Long", value: 0},
   {label: "Short", value: 1}
 ] as const;
 
-const demoFundedLabel = demoConfig.fundedDemo?.label ?? "DEMO FILL";
-
 function Dashboard() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const publicClient = usePublicClient();
-  const wallet = usePropmonWallet();
-  const {address, chainId, authenticated: isConnected} = wallet;
-  const [switchingChain, setSwitchingChain] = useState(false);
-  const {data: blockNumber} = useBlockNumber({watch: true});
-  const addresses = useMemo(() => getContractAddresses(), []);
-  const ready = contractsReady(addresses);
-  const [mode, setMode] = useState<PropmonMode>(() => parseMode(searchParams.get("mode")));
+  const {core, prices, agent, events, account, actions, demo} = usePropmon();
+  const {
+    wallet,
+    address,
+    isConnected,
+    onWrongChain,
+    switchingChain,
+    setSwitchingChain,
+    ensureMonadTestnet,
+    mode,
+    setMode,
+    ready,
+    examinationAddress,
+    registryAddress,
+    fundedAddress,
+    accountId,
+    accountIdInput,
+    setAccountIdInput,
+    selectedMarketId,
+    setSelectedMarketId
+  } = core;
+  const {writeContractAsync, submit, writePending, receiptPending, lastHash, lastAction, actionError} = actions;
+  const {agentSigner, agentSignerStatus} = agent;
+  const {demoFundedLabel} = events;
+  const {exam, funded, stateLabel, drawdown, passedFailed, entries, authorizedSigner} = account;
+  const {runDemoScript, demoStatus} = demo;
+  const {prices: priceCells, activePrice} = prices;
+
   const [selectedTier, setSelectedTier] = useState(0);
-  const [accountIdInput, setAccountIdInput] = useState("");
-  const [agentSigner, setAgentSigner] = useState("");
-  const [agentSignerStatus, setAgentSignerStatus] = useState("Loading agent signer...");
-  const [selectedMarketId, setSelectedMarketId] = useState(defaultMarket.id);
   const [tradeSide, setTradeSide] = useState<0 | 1>(0);
   const [sizeDelta, setSizeDelta] = useState("250000");
   const [collateral, setCollateral] = useState("250");
   const [fundedSizeDelta, setFundedSizeDelta] = useState("250000");
   const [fundedCollateral, setFundedCollateral] = useState("250");
-  const [lastHash, setLastHash] = useState<Hex>();
-  const [lastAction, setLastAction] = useState("");
-  const [actionError, setActionError] = useState("");
-  const [demoStatus, setDemoStatus] = useState("");
-  const [ledgerHashes, setLedgerHashes] = useState<LedgerRow[]>([]);
-  const [fundedEvents, setFundedEvents] = useState<FundedEvent[]>([]);
 
-  const accountId = accountIdInput.trim() ? BigInt(accountIdInput.trim()) : undefined;
   const selectedTierData = tierOptions[selectedTier] ?? tierOptions[0];
   const expectedFee = (selectedTierData.accountSize * 100n) / 10_000n;
-  const onWrongChain = isConnected && chainId !== MONAD_TESTNET_CHAIN_ID;
-
-  const {writeContractAsync, isPending: writePending} = useWriteContract();
-  const {data: receipt, isLoading: receiptPending} = useWaitForTransactionReceipt({hash: lastHash});
-
-  const registryAddress = ready ? addresses.accountRegistry : zeroAddress;
-  const examinationAddress = ready ? addresses.examinationVault : zeroAddress;
-  const fundedAddress = ready ? addresses.fundedVault : zeroAddress;
-  const priceAddress = ready ? addresses.perplPriceAdapter : zeroAddress;
-
-  const priceReads = useReadContracts({
-    contracts: markets.map((market) => ({
-      address: priceAddress,
-      abi: priceAdapterAbi,
-      functionName: "getPrice",
-      args: [BigInt(market.id)]
-    })),
-    query: {enabled: ready, refetchInterval: 5000}
-  });
-
-  const examAccount = useReadContract({
-    address: examinationAddress,
-    abi: examinationVaultAbi,
-    functionName: "getAccount",
-    args: [accountId ?? 0n],
-    query: {enabled: ready && Boolean(accountId), refetchInterval: 4000}
-  });
-  const examDrawdown = useReadContract({
-    address: examinationAddress,
-    abi: examinationVaultAbi,
-    functionName: "getDrawdown",
-    args: [accountId ?? 0n],
-    query: {enabled: ready && Boolean(accountId), refetchInterval: 4000}
-  });
-  const examEntries = useReadContract({
-    address: examinationAddress,
-    abi: examinationVaultAbi,
-    functionName: "getEntries",
-    args: [accountId ?? 0n],
-    query: {enabled: ready && Boolean(accountId), refetchInterval: 4000}
-  });
-  const ruleStatus = useReadContract({
-    address: examinationAddress,
-    abi: examinationVaultAbi,
-    functionName: "getRuleStatus",
-    args: [accountId ?? 0n],
-    query: {enabled: ready && Boolean(accountId), refetchInterval: 4000}
-  });
-  const registryState = useReadContract({
-    address: registryAddress,
-    abi: accountRegistryAbi,
-    functionName: "stateOf",
-    args: [accountId ?? 0n],
-    query: {enabled: ready && Boolean(accountId), refetchInterval: 4000}
-  });
-  const authorizedSigner = useReadContract({
-    address: registryAddress,
-    abi: accountRegistryAbi,
-    functionName: "isAuthorizedSigner",
-    args: [accountId ?? 0n, isAddress(agentSigner) ? (agentSigner as Address) : zeroAddress],
-    query: {enabled: ready && Boolean(accountId) && isAddress(agentSigner), refetchInterval: 6000}
-  });
-  const fundedAccount = useReadContract({
-    address: fundedAddress,
-    abi: fundedVaultAbi,
-    functionName: "getAccount",
-    args: [accountId ?? 0n],
-    query: {enabled: ready && Boolean(accountId) && Number(registryState.data ?? 0) >= 3, refetchInterval: 4000}
-  });
-
-  useEffect(() => {
-    const nextMode = parseMode(searchParams.get("mode"));
-    setMode(nextMode);
-  }, [searchParams]);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function loadAgentSigner() {
-      setAgentSignerStatus("Loading agent signer...");
-      try {
-        const response = await fetch("/api/agent-signer", {cache: "no-store"});
-        const body = await response.json().catch(() => ({})) as {address?: string; mode?: string; error?: string};
-        if (cancelled) return;
-        if (!response.ok || !body.address || !isAddress(body.address)) {
-          setAgentSigner("");
-          setAgentSignerStatus(body.error ?? "Agent signer service unavailable.");
-          return;
-        }
-        setAgentSigner(body.address);
-        setAgentSignerStatus(`${body.mode ?? "agent"} ${shortHash(body.address)}`);
-      } catch (error) {
-        if (!cancelled) {
-          setAgentSigner("");
-          setAgentSignerStatus(errorMessage(error));
-        }
-      }
-    }
-    void loadAgentSigner();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    examAccount.refetch();
-    examDrawdown.refetch();
-    examEntries.refetch();
-    ruleStatus.refetch();
-    registryState.refetch();
-    fundedAccount.refetch();
-  }, [blockNumber]);
-
-  useEffect(() => {
-    if (!receipt || !ready) return;
-    for (const log of receipt.logs) {
-      try {
-        const decoded = decodeEventLog({abi: examinationVaultAbi, data: log.data, topics: log.topics});
-        if (decoded.eventName === "ExaminationPurchased") {
-          setAccountIdInput(decoded.args.accountId.toString());
-        }
-      } catch {
-        continue;
-      }
-    }
-  }, [receipt, ready]);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function loadEvents() {
-      if (!publicClient || !ready || !accountId) return;
-      const [entries, liveIntents, fills, demoFills, payouts] = await Promise.all([
-        publicClient.getContractEvents({
-          address: examinationAddress,
-          abi: examinationVaultAbi,
-          eventName: "EntryRecorded",
-          args: {accountId},
-          fromBlock: 0n
-        }),
-        publicClient.getContractEvents({
-          address: fundedAddress,
-          abi: fundedVaultAbi,
-          eventName: "LivePositionIntent",
-          args: {accountId},
-          fromBlock: 0n
-        }),
-        publicClient.getContractEvents({
-          address: fundedAddress,
-          abi: fundedVaultAbi,
-          eventName: "PositionFilled",
-          args: {accountId},
-          fromBlock: 0n
-        }),
-        publicClient.getContractEvents({
-          address: fundedAddress,
-          abi: fundedVaultAbi,
-          eventName: "DemoFill",
-          args: {accountId},
-          fromBlock: 0n
-        }),
-        publicClient.getContractEvents({
-          address: fundedAddress,
-          abi: fundedVaultAbi,
-          eventName: "PayoutClaimed",
-          args: {accountId},
-          fromBlock: 0n
-        })
-      ]);
-      if (cancelled) return;
-      setLedgerHashes(
-        entries.map((event, index) => ({
-          key: `${event.transactionHash}-${event.logIndex ?? index}`,
-          marketId: event.args.marketId ?? 0n,
-          sizeDelta: event.args.sizeDelta ?? 0n,
-          markPrice: event.args.markPrice ?? 0n,
-          equityAfter: event.args.newEquity,
-          hash: event.transactionHash
-        }))
-      );
-      setFundedEvents([
-        ...liveIntents.map((event, index) => ({
-          key: `intent-${event.transactionHash}-${event.logIndex ?? index}`,
-          label: "LIVE INTENT",
-          detail: `${marketById(event.args.marketId ?? 0n)?.symbol ?? "Market"} request ${event.args.requestId?.toString() ?? "--"} pending Perpl fill`,
-          hash: event.transactionHash
-        })),
-        ...fills.map((event, index) => ({
-          key: `fill-${event.transactionHash}-${event.logIndex ?? index}`,
-          label: Number(event.args.mode ?? 0) === 1 ? demoFundedLabel : "LIVE FILL",
-          detail: `${marketById(event.args.marketId ?? 0n)?.symbol ?? "Market"} filled at ${event.args.fillPrice?.toString() ?? "--"}`,
-          hash: event.transactionHash
-        })),
-        ...demoFills.map((event, index) => ({
-          key: `demo-${event.transactionHash}-${event.logIndex ?? index}`,
-          label: demoFundedLabel,
-          detail: `${marketById(event.args.marketId ?? 0n)?.symbol ?? "Market"} demo fill at ${event.args.price?.toString() ?? "--"}`,
-          hash: event.transactionHash
-        })),
-        ...payouts.map((event, index) => ({
-          key: `payout-${event.transactionHash}-${event.logIndex ?? index}`,
-          label: "PAYOUT",
-          detail: `Trader ${formatQuote(event.args.traderAmount)} / firm ${formatQuote(event.args.protocolAmount)}`,
-          hash: event.transactionHash
-        }))
-      ]);
-    }
-    loadEvents().catch((error) => setActionError(errorMessage(error)));
-    return () => {
-      cancelled = true;
-    };
-  }, [publicClient, ready, accountId, blockNumber, examinationAddress, fundedAddress]);
-
-  useWatchContractEvent({
-    address: examinationAddress,
-    abi: examinationVaultAbi,
-    eventName: "EntryRecorded",
-    enabled: ready,
-    onLogs: () => examEntries.refetch()
-  });
-
-  function setUrlMode(nextMode: PropmonMode) {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("mode", nextMode);
-    setMode(nextMode);
-    router.replace(`${pathname}?${params.toString()}`, {scroll: false});
-  }
-
-  async function submit(label: string, fn: () => Promise<Hex>) {
-    setActionError("");
-    setLastAction(label);
-    try {
-      const hash = await fn();
-      setLastHash(hash);
-    } catch (error) {
-      setActionError(errorMessage(error));
-    }
-  }
-
-  async function runDemoScript() {
-    if (!accountId) {
-      setDemoStatus("Enter or buy an account first.");
-      return;
-    }
-    setDemoStatus("Triggering external Agent 06 demo script...");
-    const response = await fetch("/api/demo-script", {
-      method: "POST",
-      headers: {"content-type": "application/json", "x-propmon-mode": mode},
-      body: JSON.stringify({mode, accountId: accountId.toString()})
-    });
-    const body = await response.json().catch(() => ({}));
-    setDemoStatus(response.ok ? "Demo script accepted by Agent 06." : body.error ?? "Demo script service unavailable.");
-  }
-
-  const prices = markets.map((market, index) => {
-    const result = priceReads.data?.[index]?.result as readonly [bigint, number, bigint] | undefined;
-    return {market, price: result?.[0], decimals: result?.[1], updatedAt: result?.[2]};
-  });
-  const activePrice = prices.find((item) => item.market.id === selectedMarketId);
-  const exam = examAccount.data;
-  const funded = fundedAccount.data;
-  const stateIndex = Number(registryState.data ?? exam?.state ?? 0);
-  const stateLabel = accountStates[stateIndex] ?? "UNKNOWN";
-  const drawdown = examDrawdown.data;
-  const passedFailed = ruleStatus.data;
-  const entries = (examEntries.data ?? []).map((entry, index) => {
-    const event = ledgerHashes[index];
-    return {
-      key: event?.key ?? `${entry.timestamp}-${index}`,
-      marketId: entry.marketId,
-      sizeDelta: entry.sizeDelta,
-      markPrice: entry.markPrice,
-      timestamp: entry.timestamp,
-      equityAfter: entry.equityAfter,
-      hash: event?.hash
-    };
-  });
 
   return (
     <main className="appShell">
@@ -382,8 +72,8 @@ function Dashboard() {
         </div>
         <div className="topActions">
           <div className="modeToggle" aria-label="Mode toggle">
-            <button className={mode === "demo" ? "active" : ""} onClick={() => setUrlMode("demo")}>DEMO</button>
-            <button className={mode === "live" ? "active" : ""} onClick={() => setUrlMode("live")}>LIVE</button>
+            <button className={mode === "demo" ? "active" : ""} onClick={() => setMode("demo")}>DEMO</button>
+            <button className={mode === "live" ? "active" : ""} onClick={() => setMode("live")}>LIVE</button>
           </div>
           {address ? (
             <a className="walletPill" href={addressUrl(address)} target="_blank" rel="noreferrer">{shortHash(address)}</a>
@@ -404,7 +94,7 @@ function Dashboard() {
           <button
             onClick={() => {
               setSwitchingChain(true);
-              wallet.ensureMonadTestnet().catch((error) => setActionError(errorMessage(error))).finally(() => setSwitchingChain(false));
+              ensureMonadTestnet().catch((error) => actions.setActionError(errorMessage(error))).finally(() => setSwitchingChain(false));
             }}
             disabled={switchingChain}
           >
@@ -416,7 +106,7 @@ function Dashboard() {
       {!ready && <DeploymentNotice />}
 
       <section className="marketStrip">
-        {prices.map(({market, price, decimals, updatedAt}) => (
+        {priceCells.map(({market, price, decimals, updatedAt}) => (
           <button
             key={market.id}
             className={market.id === selectedMarketId ? "marketPill active" : "marketPill"}
@@ -698,8 +388,8 @@ function Dashboard() {
             Close in Profit {"->"} Payout
           </button>
           <div className="timeline">
-            {fundedEvents.length === 0 && <p className="helper">No funded events indexed yet.</p>}
-            {fundedEvents.slice().reverse().map((event) => (
+            {events.fundedEvents.length === 0 && <p className="helper">No funded events indexed yet.</p>}
+            {events.fundedEvents.slice().reverse().map((event) => (
               <div className="timelineItem" key={event.key}>
                 <strong>{event.label}</strong>
                 <span>{event.detail}</span>
@@ -768,9 +458,5 @@ function signedSizeDelta(value: string, side: 0 | 1): bigint {
 }
 
 export default function Page() {
-  return (
-    <Suspense fallback={<main className="appShell"><section className="panel">Loading Propmon...</section></main>}>
-      <Dashboard />
-    </Suspense>
-  );
+  return <Dashboard />;
 }
