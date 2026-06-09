@@ -8,8 +8,11 @@
     "test": "pnpm --filter @propmon/relayer test && pnpm --filter @propmon/agent test && forge test --root contracts",
     "dayzero:public": "tsx scripts/dayzero-public.ts",
     "deploy:monad": "forge script contracts/script/Deploy.s.sol:Deploy --root contracts --rpc-url ${MONAD_RPC_URL:-https://testnet-rpc.monad.xyz} --private-key ${OWNER_PRIVATE_KEY} --broadcast",
+    "smoke:demo": "PROPMON_MODE=demo tsx scripts/integration-smoke.ts demo",
+    "smoke:live": "PROPMON_MODE=live tsx scripts/integration-smoke.ts live",
     "relayer:dev": "pnpm --filter @propmon/relayer dev",
     "agent:dev": "pnpm --filter @propmon/agent dev",
+    "agent:server": "pnpm --filter @propmon/agent server",
     "agent:test": "pnpm --filter @propmon/agent test",
     "agent:build": "pnpm --filter @propmon/agent build",
     "web:dev": "pnpm --filter @propmon/web dev"

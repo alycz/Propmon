@@ -4,6 +4,7 @@ export {buildAuthSignInMessage, buildOrderRequestMessage, parseFillMessage} from
 export {nextRq, seedRqFromLfr} from "./rq.js";
 export {decideNextTrade, fundedExecutionRoute, selectVaultPath} from "./strategy.js";
 export {runAgentLoop, runAgentOnce} from "./loop.js";
+export {runDemoScript} from "./demo-runner.js";
 export {handleFillMessage, startLiveIntentWatcher} from "./live.js";
 export type {AgentConfig, FundedExecutionRoute, TradeDecision, VaultPath} from "./types.js";
 
