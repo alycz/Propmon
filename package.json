@@ -10,6 +10,8 @@
     "deploy:monad": "forge script contracts/script/Deploy.s.sol:Deploy --root contracts --rpc-url ${MONAD_RPC_URL:-https://testnet-rpc.monad.xyz} --private-key ${OWNER_PRIVATE_KEY} --broadcast",
     "relayer:dev": "pnpm --filter @propmon/relayer dev",
     "agent:dev": "pnpm --filter @propmon/agent dev",
+    "agent:test": "pnpm --filter @propmon/agent test",
+    "agent:build": "pnpm --filter @propmon/agent build",
     "web:dev": "pnpm --filter @propmon/web dev"
   },
   "devDependencies": {

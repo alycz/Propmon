@@ -1,14 +1,29 @@
-export type FundedExecutionRoute = "live-perpl-ws" | "demo-onchain-fill";
+export {loadAgentConfig, resolveAgentMode} from "./config.js";
+export {PerplWhitelistError, connectPerpl} from "./perpl-auth.js";
+export {buildAuthSignInMessage, buildOrderRequestMessage, parseFillMessage} from "./perpl-ws.js";
+export {nextRq, seedRqFromLfr} from "./rq.js";
+export {decideNextTrade, fundedExecutionRoute, selectVaultPath} from "./strategy.js";
+export {runAgentLoop, runAgentOnce} from "./loop.js";
+export {handleFillMessage, startLiveIntentWatcher} from "./live.js";
+export type {AgentConfig, FundedExecutionRoute, TradeDecision, VaultPath} from "./types.js";
 
-export function fundedExecutionRoute(mode: string | undefined, whitelisted: boolean): FundedExecutionRoute {
-  if (mode === "live" && whitelisted) {
-    return "live-perpl-ws";
+import {loadAgentConfig} from "./config.js";
+import {runAgentLoop} from "./loop.js";
+import {startLiveIntentWatcher} from "./live.js";
+
+async function main(): Promise<void> {
+  const config = loadAgentConfig();
+  console.log(`Propmon Agent 06 starting in ${config.mode} mode for account ${config.accountId}`);
+
+  if (config.mode === "live") {
+    await startLiveIntentWatcher(config);
   }
-
-  return "demo-onchain-fill";
+  await runAgentLoop(config);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const route = fundedExecutionRoute(process.env.PROPMON_MODE, process.env.PERPL_AUTH_GO === "true");
-  console.log(`Propmon agent scaffold ready. Funded route: ${route}`);
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
 }
