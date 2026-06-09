@@ -718,6 +718,165 @@ a:hover {
   margin: 0;
 }
 
+/* ---------- Examination ---------- */
+.examHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border: 1px solid #1c252e;
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  background: #0d1116;
+}
+
+.examHeaderInfo {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.examHeadCell {
+  display: grid;
+  gap: 4px;
+}
+
+.examHeadCell span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a949e;
+}
+
+.examHeadCell strong {
+  font-size: 18px;
+  color: #f5f7fa;
+}
+
+.examCta .cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 180px;
+  padding: 0 22px;
+  text-decoration: none;
+}
+
+.examCta .cta:hover {
+  text-decoration: none;
+}
+
+.anchorPanel {
+  position: relative;
+}
+
+.anchor {
+  position: absolute;
+  top: -90px;
+}
+
+.progressBlock {
+  margin: 16px 0;
+}
+
+.progressLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #c7d0d6;
+}
+
+.progressTrack {
+  height: 14px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #1a2128;
+  border: 1px solid #1c252e;
+}
+
+.progressFill {
+  height: 100%;
+  min-width: 4px;
+  background: #8fd7ff;
+  transition: width 240ms ease;
+}
+
+.progressFill.done {
+  background: #82e2a8;
+}
+
+.ruleList {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.ruleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #1c252e;
+  border-radius: 2px;
+  padding: 12px;
+  background: #11171c;
+}
+
+.ruleRow strong {
+  color: #f5f7fa;
+}
+
+.ruleRow .helper {
+  margin: 4px 0 0;
+}
+
+.stateMachine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin: 16px 0 6px;
+  flex-wrap: wrap;
+}
+
+.stateStep {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #8a949e;
+}
+
+.stateDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #2d383e;
+}
+
+.stateStep.active {
+  color: #82e2a8;
+}
+
+.stateStep.active .stateDot {
+  background: #82e2a8;
+}
+
+.stateStep.cleared .stateDot {
+  background: #4d6b58;
+}
+
+.examLedgerCols {
+  grid-template-columns: 0.8fr 0.7fr 1fr 1fr 1fr 0.7fr;
+}
+
 @media (max-width: 1200px) {
   .terminalTop {
     grid-template-columns: 1fr 1fr;
