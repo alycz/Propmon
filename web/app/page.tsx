@@ -1,15 +1,12 @@
 "use client";
 
-import {ConnectButton} from "@rainbow-me/rainbowkit";
 import {Suspense, useEffect, useMemo, useState} from "react";
 import {decodeEventLog, isAddress, zeroAddress, type Address, type Hex} from "viem";
 import {
-  useAccount,
   useBlockNumber,
   usePublicClient,
   useReadContract,
   useReadContracts,
-  useSwitchChain,
   useWaitForTransactionReceipt,
   useWatchContractEvent,
   useWriteContract
@@ -26,7 +23,6 @@ import {
   marketById,
   markets,
   MONAD_TESTNET_CHAIN_ID,
-  monadTestnet,
   parseMode,
   tierOptions,
   type PropmonMode
@@ -43,6 +39,7 @@ import {
   shortHash,
   txUrl
 } from "../lib/format";
+import {usePropmonWallet} from "../lib/use-propmon-wallet";
 
 type LedgerRow = {
   key: string;
@@ -73,8 +70,9 @@ function Dashboard() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const publicClient = usePublicClient();
-  const {address, chainId, isConnected} = useAccount();
-  const {switchChain, isPending: switchingChain} = useSwitchChain();
+  const wallet = usePropmonWallet();
+  const {address, chainId, authenticated: isConnected} = wallet;
+  const [switchingChain, setSwitchingChain] = useState(false);
   const {data: blockNumber} = useBlockNumber({watch: true});
   const addresses = useMemo(() => getContractAddresses(), []);
   const ready = contractsReady(addresses);
@@ -82,6 +80,7 @@ function Dashboard() {
   const [selectedTier, setSelectedTier] = useState(0);
   const [accountIdInput, setAccountIdInput] = useState("");
   const [agentSigner, setAgentSigner] = useState("");
+  const [agentSignerStatus, setAgentSignerStatus] = useState("Loading agent signer...");
   const [selectedMarketId, setSelectedMarketId] = useState(defaultMarket.id);
   const [tradeSide, setTradeSide] = useState<0 | 1>(0);
   const [sizeDelta, setSizeDelta] = useState("250000");
@@ -172,6 +171,34 @@ function Dashboard() {
     const nextMode = parseMode(searchParams.get("mode"));
     setMode(nextMode);
   }, [searchParams]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadAgentSigner() {
+      setAgentSignerStatus("Loading agent signer...");
+      try {
+        const response = await fetch("/api/agent-signer", {cache: "no-store"});
+        const body = await response.json().catch(() => ({})) as {address?: string; mode?: string; error?: string};
+        if (cancelled) return;
+        if (!response.ok || !body.address || !isAddress(body.address)) {
+          setAgentSigner("");
+          setAgentSignerStatus(body.error ?? "Agent signer service unavailable.");
+          return;
+        }
+        setAgentSigner(body.address);
+        setAgentSignerStatus(`${body.mode ?? "agent"} ${shortHash(body.address)}`);
+      } catch (error) {
+        if (!cancelled) {
+          setAgentSigner("");
+          setAgentSignerStatus(errorMessage(error));
+        }
+      }
+    }
+    void loadAgentSigner();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     examAccount.refetch();
@@ -358,7 +385,12 @@ function Dashboard() {
             <button className={mode === "demo" ? "active" : ""} onClick={() => setUrlMode("demo")}>DEMO</button>
             <button className={mode === "live" ? "active" : ""} onClick={() => setUrlMode("live")}>LIVE</button>
           </div>
-          <ConnectButton chainStatus="name" accountStatus="address" showBalance={false} />
+          {address ? (
+            <a className="walletPill" href={addressUrl(address)} target="_blank" rel="noreferrer">{shortHash(address)}</a>
+          ) : null}
+          <button className="secondary" onClick={() => (wallet.authenticated ? void wallet.logout() : wallet.login())} disabled={!wallet.ready}>
+            {wallet.authenticated ? "Logout" : "Connect"}
+          </button>
         </div>
       </header>
 
@@ -369,7 +401,13 @@ function Dashboard() {
       {onWrongChain && (
         <section className="notice">
           Connected to the wrong network. Switch to Monad Testnet before submitting transactions.
-          <button onClick={() => switchChain({chainId: monadTestnet.id})} disabled={switchingChain}>
+          <button
+            onClick={() => {
+              setSwitchingChain(true);
+              wallet.ensureMonadTestnet().catch((error) => setActionError(errorMessage(error))).finally(() => setSwitchingChain(false));
+            }}
+            disabled={switchingChain}
+          >
             {switchingChain ? "Switching..." : "Switch network"}
           </button>
         </section>
@@ -529,10 +567,15 @@ function Dashboard() {
 
       <section className="grid two">
         <Panel title="Connect an Agent" eyebrow="Authorized signer">
-          <label className="field">
-            <span>Agent signer address</span>
-            <input value={agentSigner} onChange={(event) => setAgentSigner(event.target.value)} placeholder="0x..." />
-          </label>
+          <div className="agentSignerBox">
+            <span>Agent signer</span>
+            {isAddress(agentSigner) ? (
+              <a href={addressUrl(agentSigner)} target="_blank" rel="noreferrer">{shortHash(agentSigner)}</a>
+            ) : (
+              <strong>Unavailable</strong>
+            )}
+            <small>{agentSignerStatus}</small>
+          </div>
           <div className="buttonRow">
             <button
               className="secondary"

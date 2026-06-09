@@ -154,6 +154,38 @@ a:hover {
   background: #182126;
 }
 
+.walletPill {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #3a484f;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #f6f2e8;
+  background: #182126;
+  font-weight: 800;
+}
+
+.agentSignerBox {
+  display: grid;
+  gap: 6px;
+  border: 1px solid #344148;
+  border-radius: 8px;
+  padding: 12px;
+  background: #11171b;
+}
+
+.agentSignerBox span,
+.agentSignerBox small {
+  color: #aeb9bd;
+}
+
+.agentSignerBox a,
+.agentSignerBox strong {
+  color: #f6f2e8;
+  font-size: 18px;
+}
+
 .marketStrip {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));

@@ -1,9 +1,23 @@
-import {createPublicClient, createWalletClient, defineChain, http, type Address, type Hex} from "viem";
+import {createPublicClient, createWalletClient, defineChain, encodeFunctionData, http, type Address, type Hex} from "viem";
 import {privateKeyToAccount} from "viem/accounts";
 
 import {accountRegistryAbi, examinationVaultAbi, fundedVaultAbi} from "./abi.js";
+import {createAgentSigner, requireAgentPrivateKey, type AgentSigner} from "./signer.js";
 import type {AgentConfig, TradeDecision} from "./types.js";
 import {AccountState, VaultSide} from "./types.js";
+
+export function createChain(config: AgentConfig) {
+  return defineChain({
+    id: config.chainId,
+    name: "Monad Testnet",
+    nativeCurrency: {name: "MON", symbol: "MON", decimals: 18},
+    rpcUrls: {default: {http: [config.rpcUrl]}}
+  });
+}
+
+export function createPublicClientForConfig(config: AgentConfig) {
+  return createPublicClient({chain: createChain(config), transport: http(config.rpcUrl)});
+}
 
 export function createClients(config: AgentConfig, privateKey: Hex) {
   const chain = defineChain({
@@ -19,21 +33,23 @@ export function createClients(config: AgentConfig, privateKey: Hex) {
 }
 
 export async function assertAuthorizedSigner(config: AgentConfig): Promise<Address> {
-  const {account, publicClient} = createClients(config, config.agentPrivateKey);
+  const signer = createAgentSigner(config);
+  const signerAddress = await signer.getAddress();
+  const publicClient = createPublicClientForConfig(config);
   const authorized = await publicClient.readContract({
     address: config.deployments.accountRegistry,
     abi: accountRegistryAbi,
     functionName: "isAuthorizedSigner",
-    args: [config.accountId, account.address]
+    args: [config.accountId, signerAddress]
   });
   if (!authorized) {
-    throw new Error(`Agent signer ${account.address} is not authorized for account ${config.accountId}`);
+    throw new Error(`Agent signer ${signerAddress} is not authorized for account ${config.accountId}`);
   }
-  return account.address;
+  return signerAddress;
 }
 
 export async function getAccountState(config: AgentConfig): Promise<AccountState> {
-  const {publicClient} = createClients(config, config.agentPrivateKey);
+  const publicClient = createPublicClientForConfig(config);
   const state = await publicClient.readContract({
     address: config.deployments.accountRegistry,
     abi: accountRegistryAbi,
@@ -44,38 +60,65 @@ export async function getAccountState(config: AgentConfig): Promise<AccountState
 }
 
 export async function submitExaminationEntry(config: AgentConfig, decision: TradeDecision): Promise<Hex> {
-  const {walletClient} = createClients(config, config.agentPrivateKey);
-  return walletClient.writeContract({
-    address: config.deployments.examinationVault,
-    abi: examinationVaultAbi,
-    functionName: "recordEntry",
-    args: [config.accountId, decision.marketId, decision.side, decision.sizeDelta, decision.collateral]
+  return submitExaminationEntryWithSigner(createAgentSigner(config), config, decision);
+}
+
+export async function submitExaminationEntryWithSigner(
+  signer: AgentSigner,
+  config: AgentConfig,
+  decision: TradeDecision
+): Promise<Hex> {
+  return signer.sendTransaction({
+    to: config.deployments.examinationVault,
+    data: encodeFunctionData({
+      abi: examinationVaultAbi,
+      functionName: "recordEntry",
+      args: [config.accountId, decision.marketId, decision.side, decision.sizeDelta, decision.collateral]
+    })
   });
 }
 
 export async function submitFundedDemo(config: AgentConfig, decision: TradeDecision): Promise<Hex> {
-  const {walletClient} = createClients(config, config.agentPrivateKey);
+  return submitFundedDemoWithSigner(createAgentSigner(config), config, decision);
+}
+
+export async function submitFundedDemoWithSigner(
+  signer: AgentSigner,
+  config: AgentConfig,
+  decision: TradeDecision
+): Promise<Hex> {
   const isClose = decision.collateral === 0n;
-  return walletClient.writeContract({
-    address: config.deployments.fundedVault,
-    abi: fundedVaultAbi,
-    functionName: isClose ? "closePositionDemo" : "openPositionDemo",
-    args: isClose
-      ? [config.accountId, decision.marketId, decision.sizeDelta]
-      : [config.accountId, decision.marketId, decision.side, decision.sizeDelta, decision.collateral]
+  return signer.sendTransaction({
+    to: config.deployments.fundedVault,
+    data: encodeFunctionData({
+      abi: fundedVaultAbi,
+      functionName: isClose ? "closePositionDemo" : "openPositionDemo",
+      args: isClose
+        ? [config.accountId, decision.marketId, decision.sizeDelta]
+        : [config.accountId, decision.marketId, decision.side, decision.sizeDelta, decision.collateral]
+    })
   });
 }
 
 export async function submitFundedLiveIntent(config: AgentConfig, decision: TradeDecision): Promise<Hex> {
-  const {walletClient} = createClients(config, config.agentPrivateKey);
+  return submitFundedLiveIntentWithSigner(createAgentSigner(config), config, decision);
+}
+
+export async function submitFundedLiveIntentWithSigner(
+  signer: AgentSigner,
+  config: AgentConfig,
+  decision: TradeDecision
+): Promise<Hex> {
   const isClose = decision.collateral === 0n;
-  return walletClient.writeContract({
-    address: config.deployments.fundedVault,
-    abi: fundedVaultAbi,
-    functionName: isClose ? "closePositionLive" : "openPositionLive",
-    args: isClose
-      ? [config.accountId, decision.marketId, decision.sizeDelta]
-      : [config.accountId, decision.marketId, decision.side, decision.sizeDelta, decision.collateral]
+  return signer.sendTransaction({
+    to: config.deployments.fundedVault,
+    data: encodeFunctionData({
+      abi: fundedVaultAbi,
+      functionName: isClose ? "closePositionLive" : "openPositionLive",
+      args: isClose
+        ? [config.accountId, decision.marketId, decision.sizeDelta]
+        : [config.accountId, decision.marketId, decision.side, decision.sizeDelta, decision.collateral]
+    })
   });
 }
 
@@ -97,6 +140,10 @@ export async function reconcileFillOnChain(input: {
     functionName: "reconcileFill",
     args: [input.accountId, input.requestId, input.marketId, input.sizeDelta, input.fillPrice]
   });
+}
+
+export function createFallbackPrivateKeyClients(config: AgentConfig) {
+  return createClients(config, requireAgentPrivateKey(config));
 }
 
 export function orderActionFromVaultIntent(input: {side: VaultSide | number; sizeDelta: bigint; isClose: boolean}): 1 | 2 | 3 | 4 {

@@ -1,10 +1,9 @@
-import {privateKeyToAccount} from "viem/accounts";
-
 import {fundedVaultAbi} from "./abi.js";
-import {createClients, orderActionFromVaultIntent, reconcileFillOnChain} from "./chain.js";
+import {createPublicClientForConfig, orderActionFromVaultIntent, reconcileFillOnChain} from "./chain.js";
 import {connectPerpl, PerplWhitelistError} from "./perpl-auth.js";
 import {buildOrderRequestMessage, parseFillMessage, TradingWsClient} from "./perpl-ws.js";
 import {nextRq} from "./rq.js";
+import {createAgentSigner} from "./signer.js";
 import type {AgentConfig} from "./types.js";
 
 export type LiveIntent = {
@@ -39,14 +38,15 @@ export async function handleFillMessage(input: {
 }
 
 export async function startLiveIntentWatcher(config: AgentConfig): Promise<() => void> {
-  const agent = privateKeyToAccount(config.agentPrivateKey);
-  const {publicClient} = createClients(config, config.agentPrivateKey);
+  const signer = createAgentSigner(config);
+  const signerAddress = await signer.getAddress();
+  const publicClient = createPublicClientForConfig(config);
 
   const auth = await connectPerpl({
     apiUrl: config.perplApiUrl,
-    address: agent.address,
+    address: signerAddress,
     chainId: config.chainId,
-    signMessage: (message) => agent.signMessage({message})
+    signMessage: (message) => signer.signMessage(message)
   }).catch((error: unknown) => {
     if (error instanceof PerplWhitelistError) {
       console.error(error.message);
