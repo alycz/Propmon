@@ -4,11 +4,18 @@ import dynamic from "next/dynamic";
 
 import type {ChartPoint} from "../hooks/types";
 
+export type MarketMakingViz = {
+  active: boolean;
+  spreadBps: number;
+  tick: number;
+};
+
 export type PriceChartProps = {
   series: ChartPoint[];
   symbol: string;
   height?: number;
   decimals?: number;
+  marketMaking?: MarketMakingViz;
 };
 
 // lightweight-charts is browser-only — load it with no SSR so it never runs on

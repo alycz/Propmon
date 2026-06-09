@@ -755,6 +755,20 @@ a:hover {
   color: #f5f7fa;
 }
 
+.chartAgentTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #82e2a8;
+  border: 1px solid #1d3a2a;
+  background: #0c1612;
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
 .chartFeedTag,
 .bookTag {
   font-size: 10px;

@@ -1,14 +1,35 @@
 "use client";
 
-import {AreaSeries, ColorType, CrosshairMode, createChart, type IChartApi, type ISeriesApi, type UTCTimestamp} from "lightweight-charts";
+import {
+  AreaSeries,
+  ColorType,
+  CrosshairMode,
+  LineStyle,
+  createChart,
+  createSeriesMarkers,
+  type IChartApi,
+  type IPriceLine,
+  type ISeriesApi,
+  type ISeriesMarkersPluginApi,
+  type SeriesMarker,
+  type Time,
+  type UTCTimestamp
+} from "lightweight-charts";
 import {useEffect, useRef} from "react";
 
 import type {PriceChartProps} from "./PriceChart";
 
-export default function PriceChartImpl({series, symbol, height = 320, decimals = 2}: PriceChartProps) {
+const MAX_MARKERS = 12;
+
+export default function PriceChartImpl({series, symbol, height = 320, decimals = 2, marketMaking}: PriceChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Area"> | null>(null);
+  const bidLineRef = useRef<IPriceLine | null>(null);
+  const askLineRef = useRef<IPriceLine | null>(null);
+  const markersApiRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null);
+  const markersRef = useRef<SeriesMarker<Time>[]>([]);
+  const lastTickRef = useRef(0);
 
   // Create the chart once; lightweight-charts touches the DOM/window so this only
   // runs client-side (the wrapper loads this module with ssr:false).
@@ -61,6 +82,11 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
       chart.remove();
       chartRef.current = null;
       seriesRef.current = null;
+      bidLineRef.current = null;
+      askLineRef.current = null;
+      markersApiRef.current = null;
+      markersRef.current = [];
+      lastTickRef.current = 0;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, decimals]);
@@ -78,6 +104,71 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
     chartRef.current?.timeScale().fitContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signature]);
+
+  // Simulated market-making overlay: bid/ask quote lines that hug the mark and
+  // re-center as it moves, plus periodic fill markers driven by the demo tick.
+  const mmActive = marketMaking?.active ?? false;
+  const mmTick = marketMaking?.tick ?? 0;
+  const mmSpread = (marketMaking?.spreadBps ?? 8) / 10_000;
+  const mark = last?.value;
+  const markTime = last?.time;
+  useEffect(() => {
+    const s = seriesRef.current;
+    if (!s) return;
+
+    if (bidLineRef.current) {
+      s.removePriceLine(bidLineRef.current);
+      bidLineRef.current = null;
+    }
+    if (askLineRef.current) {
+      s.removePriceLine(askLineRef.current);
+      askLineRef.current = null;
+    }
+
+    if (!mmActive || mark === undefined || !Number.isFinite(mark)) {
+      markersRef.current = [];
+      markersApiRef.current?.setMarkers([]);
+      lastTickRef.current = 0;
+      return;
+    }
+
+    bidLineRef.current = s.createPriceLine({
+      price: mark * (1 - mmSpread),
+      color: "#82e2a8",
+      lineWidth: 1,
+      lineStyle: LineStyle.Dashed,
+      axisLabelVisible: true,
+      title: "BID"
+    });
+    askLineRef.current = s.createPriceLine({
+      price: mark * (1 + mmSpread),
+      color: "#ff6262",
+      lineWidth: 1,
+      lineStyle: LineStyle.Dashed,
+      axisLabelVisible: true,
+      title: "ASK"
+    });
+
+    if (markTime !== undefined && mmTick > lastTickRef.current) {
+      lastTickRef.current = mmTick;
+      const isAsk = mmTick % 2 === 0;
+      const marker: SeriesMarker<Time> = {
+        time: Math.floor(markTime) as UTCTimestamp,
+        position: isAsk ? "aboveBar" : "belowBar",
+        color: isAsk ? "#ff6262" : "#82e2a8",
+        shape: "circle",
+        size: 0.6
+      };
+      markersRef.current = [...markersRef.current, marker].slice(-MAX_MARKERS);
+    }
+
+    if (!markersApiRef.current) {
+      markersApiRef.current = createSeriesMarkers(s, markersRef.current);
+    } else {
+      markersApiRef.current.setMarkers(markersRef.current);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mmActive, mmTick, mark, markTime, mmSpread]);
 
   return (
     <div className="chartWrap">

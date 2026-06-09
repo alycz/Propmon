@@ -3,6 +3,7 @@
 import {useState} from "react";
 
 import {marketById} from "../lib/config";
+import {useAgentDemo} from "./AgentDemoProvider";
 import {ExecutionPanel} from "./ExecutionPanel";
 import {FundedEventsPanel} from "./FundedEventsPanel";
 import {MarketStrip} from "./MarketStrip";
@@ -18,6 +19,7 @@ const timeframes = ["1m", "5m", "15m", "1h"] as const;
 
 export function TradingSurface({surface}: {surface: SurfaceKind}) {
   const {core, prices} = usePropmon();
+  const {mm} = useAgentDemo();
   const market = marketById(core.selectedMarketId);
   const [timeframe, setTimeframe] = useState<(typeof timeframes)[number]>("5m");
 
@@ -45,6 +47,11 @@ export function TradingSurface({surface}: {surface: SurfaceKind}) {
               <div className="chartTitle">
                 <strong>{market?.symbol ?? "--"}</strong>
                 <span className="chartFeedTag">{core.mode === "demo" ? "DEMO SERIES" : "LIVE SPOT TICKS"}</span>
+                {mm.active && (
+                  <span className="chartAgentTag">
+                    <span className="agentPillDot" /> Agent market-making (demo)
+                  </span>
+                )}
               </div>
               <div className="timeframes">
                 {timeframes.map((tf) => (
@@ -59,6 +66,7 @@ export function TradingSurface({surface}: {surface: SurfaceKind}) {
               symbol={market?.symbol ?? "--"}
               decimals={market?.priceDecimals ?? 2}
               height={360}
+              marketMaking={{active: mm.active, spreadBps: mm.spreadBps, tick: mm.tick}}
             />
             <p className="chartFootnote">
               Series is derived from on-chain spot reads (no historical price feed exists on-chain)
