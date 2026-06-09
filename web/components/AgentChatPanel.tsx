@@ -132,7 +132,7 @@ export function AgentChatPanel({surface}: {surface: SurfaceKind}) {
               Reset demo
             </button>
           )}
-          <input className="agentInput" disabled placeholder="Demo mode — scripted conversation. Live agent chat coming soon." />
+          <input className="agentInput" disabled placeholder="Demo mode — scripted walkthrough. Live chat soon." />
         </div>
       ) : (
         <div className="agentControls">
