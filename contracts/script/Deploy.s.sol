@@ -3,6 +3,7 @@ pragma solidity ^0.8.28;
 
 import {Script} from "forge-std/Script.sol";
 import {console2} from "forge-std/console2.sol";
+import {PerplPriceAdapter} from "../src/oracle/PerplPriceAdapter.sol";
 
 interface VmJson {
     function serializeString(string calldata objectKey, string calldata valueKey, string calldata value)
@@ -17,10 +18,15 @@ interface VmJson {
     function writeJson(string calldata json, string calldata path) external;
 }
 
+interface VmEnv {
+    function envAddress(string calldata key) external returns (address);
+}
+
 /// @notice Deployment harness stub. Downstream implementation agents replace placeholder
 /// addresses with concrete deployments while preserving the fixed deployment order.
 contract Deploy is Script {
     VmJson private constant vmJson = VmJson(address(uint160(uint256(keccak256("hevm cheat code")))));
+    VmEnv private constant vmEnv = VmEnv(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     struct DeploymentSet {
         address accountRegistry;
@@ -31,6 +37,9 @@ contract Deploy is Script {
     }
 
     function run() external returns (DeploymentSet memory deployments) {
+        address deployer = _envAddressOr("OWNER_ADDRESS", msg.sender);
+        address relayer = _envAddressOr("RELAYER_ADDRESS", deployer);
+
         vm.startBroadcast();
 
         // Fixed order:
@@ -40,17 +49,29 @@ contract Deploy is Script {
         // 4. ExaminationVault
         // 5. FundedVault
         //
-        // Concrete constructors and role wiring are owned by Agents 01-05.
+        PerplPriceAdapter perplPriceAdapter = new PerplPriceAdapter(deployer, relayer);
+
+        // Concrete constructors and role wiring for the remaining contracts are owned by Agents 02-05.
         deployments = DeploymentSet({
             accountRegistry: address(0),
             ruleEngine: address(0),
-            perplPriceAdapter: address(0),
+            perplPriceAdapter: address(perplPriceAdapter),
             examinationVault: address(0),
             fundedVault: address(0)
         });
 
         vm.stopBroadcast();
+        console2.log("PerplPriceAdapter", address(perplPriceAdapter));
+        console2.log("Relayer", relayer);
         _writeDeployments(deployments);
+    }
+
+    function _envAddressOr(string memory key, address defaultValue) internal returns (address) {
+        try vmEnv.envAddress(key) returns (address value) {
+            return value;
+        } catch {
+            return defaultValue;
+        }
     }
 
     function _writeDeployments(DeploymentSet memory deployments) internal {

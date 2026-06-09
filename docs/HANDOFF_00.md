@@ -18,7 +18,7 @@ Treat signature changes as breaking and coordinate before editing these files.
 ## Address Sources
 
 - Static address book: `shared/addresses.json`
-- Deployed ProprietaryX addresses: `shared/deployments.json`
+- Deployed Propmon addresses: `shared/deployments.json`
 - Demo parameters: `shared/demo-config.json`
 
 Perpl testnet values were checked against `/v1/pub/context`. The live collateral token is currently `AUSD` at `0xa9012a055bd4e0edff8ce09f960291c09d5322dc`.

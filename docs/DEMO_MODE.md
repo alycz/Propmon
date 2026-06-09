@@ -1,6 +1,6 @@
 # Demo Mode
 
-Demo mode is an honest presentation path for the full ProprietaryX loop when Perpl whitelist or matching timing is unavailable.
+Demo mode is an honest presentation path for the full Propmon loop when Perpl whitelist or matching timing is unavailable.
 
 ## Mode Selection
 
@@ -11,7 +11,7 @@ live | demo
 ```
 
 - Frontend: React state plus `?mode=live` or `?mode=demo`.
-- Backend, relayer, and agent: `PROPRIETARYX_MODE`, with per-request override when supplied by the frontend.
+- Backend, relayer, and agent: `PROPMON_MODE`, with per-request override when supplied by the frontend.
 - Contracts: no global demo switch.
 
 Do not use browser storage for mode persistence.

@@ -1,6 +1,6 @@
-# ProprietaryX
+# Propmon
 
-ProprietaryX is a verifiable on-chain proprietary trading firm on Monad Testnet, powered by Perpl market data and trading infrastructure.
+Propmon is a verifiable on-chain prop trading firm on Monad Testnet, powered by Perpl market data and trading infrastructure.
 
 The product loop is:
 

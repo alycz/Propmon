@@ -1,4 +1,4 @@
-# ProprietaryX Interfaces
+# Propmon Interfaces
 
 These interfaces are the shared contract between all implementation agents. Treat signature changes as breaking.
 
@@ -24,3 +24,9 @@ Core contracts do not expose a global demo switch. Demo behavior is selected by 
 - demo funded flow uses `openPositionDemo` / `closePositionDemo` and settles transparently against `IPerplPriceAdapter`.
 
 Both paths must check the same authorization and rule-engine guard.
+
+## Price Adapter Convention
+
+`IPerplPriceAdapter.getPrice(marketId)` returns the latest on-chain Perpl mark price as a scaled integer plus the explicit decimal count used for that market. The current Monad Testnet mapping and decimals live in `shared/addresses.json`.
+
+Vaults should read only `getPrice` and `isStale`. The relayer writes through the concrete `PerplPriceAdapter.pushPrice` function, which is intentionally not part of the vault-facing interface.
