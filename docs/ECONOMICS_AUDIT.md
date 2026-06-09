@@ -11,15 +11,15 @@
 | Item | Canonical | Found in Code | Location | Match? | Action |
 |---|---|---|---|---|---|
 | Tier count | 5 tiers | 3 tiers | `web/lib/config.ts` tierOptions | ❌ MISMATCH | Fixed (Step 2) |
-| Tier Bronze | $5,000 / $50 fee | Missing | `web/lib/config.ts` | ❌ MISMATCH | Fixed (Step 2) |
-| Tier Silver | $10,000 / $100 fee | $10,000 present | `web/lib/config.ts` | ✅ (partial — present after fix) | Fixed (Step 2) |
-| Tier Gold | $25,000 / $250 fee | $25,000 present | `web/lib/config.ts` | ✅ (partial — present after fix) | Fixed (Step 2) |
-| Tier Platinum | $50,000 / $500 fee | $50,000 present | `web/lib/config.ts` | ✅ (partial — present after fix) | Fixed (Step 2) |
-| Tier Diamond | $100,000 / $1,000 fee | Missing | `web/lib/config.ts` | ❌ MISMATCH | Fixed (Step 2) |
+| Tier Bronze | $5,000 / $50 fee | Added (Bronze — $5,000, examFee:50) | `web/lib/config.ts` | ✅ FIXED | Fixed (Step 2) |
+| Tier Silver | $10,000 / $100 fee | Silver — $10,000, examFee:100 | `web/lib/config.ts` | ✅ FIXED | Fixed (Step 2) |
+| Tier Gold | $25,000 / $250 fee | Gold — $25,000, examFee:250 | `web/lib/config.ts` | ✅ FIXED | Fixed (Step 2) |
+| Tier Platinum | $50,000 / $500 fee | Platinum — $50,000, examFee:500 | `web/lib/config.ts` | ✅ FIXED | Fixed (Step 2) |
+| Tier Diamond | $100,000 / $1,000 fee | Added (Diamond — $100,000, examFee:1000) | `web/lib/config.ts` | ✅ FIXED | Fixed (Step 2) |
 | Exam fee rate | 1% (EXAM_FEE_BPS=100, BPS=10000) | EXAM_FEE_BPS=100, BPS=10_000 | `contracts/src/vaults/ExaminationVault.sol` L15-16 | ✅ MATCH | No action |
 | Profit split (trader) | 85% (8500 bps) | 8000 bps default in deploy script | `contracts/script/Deploy.s.sol` L39 DEFAULT_TRADER_SHARE_BPS | ❌ CONTRACT MISMATCH | Needs redeploy decision |
-| Profit split (trader) demo-config | 85% (8500 bps) | 8000 bps | `shared/demo-config.json` fundedDemo.profitSplitBps.trader | ❌ MISMATCH | Fixed (Step 3) |
-| Profit split (protocol) demo-config | 15% (1500 bps) | 2000 bps | `shared/demo-config.json` fundedDemo.profitSplitBps.protocol | ❌ MISMATCH | Fixed (Step 3) |
+| Profit split (trader) demo-config | 85% (8500 bps) | 8500 bps (fixed) | `shared/demo-config.json` fundedDemo.profitSplitBps.trader | ✅ FIXED | Fixed (Step 3) |
+| Profit split (protocol) demo-config | 15% (1500 bps) | 1500 bps (fixed) | `shared/demo-config.json` fundedDemo.profitSplitBps.protocol | ✅ FIXED | Fixed (Step 3) |
 | Profit target bps | +10% (1000 bps) | 1000 | `shared/demo-config.json` scriptedPass.profitTargetBps | ✅ MATCH | No action |
 | Profit target bps (contract) | +10% (1000 bps) | profitTargetBps: 1_000 | `contracts/src/rules/RuleEngine.sol` L55 | ✅ MATCH | No action |
 | Max total loss | 10% (1000 bps) | maxTotalDrawdownBps: 1_000 | `contracts/src/rules/RuleEngine.sol` L57 | ✅ MATCH | No action |
