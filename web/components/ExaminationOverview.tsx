@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import {fundedVaultAbi} from "../lib/abi";
-import {formatQuote} from "../lib/format";
+import {formatQuote, titleCase} from "../lib/format";
 import {usePropmon} from "./PropmonProvider";
 
 export function ExaminationOverview() {
@@ -26,7 +26,7 @@ export function ExaminationOverview() {
         </div>
         <div className="examHeadCell">
           <span>State</span>
-          <strong className={stateBadge(stateLabel)}>{stateLabel}</strong>
+          <strong className={stateBadge(stateLabel)}>{titleCase(stateLabel)}</strong>
         </div>
         <div className="examHeadCell">
           <span>Account size</span>
@@ -34,7 +34,7 @@ export function ExaminationOverview() {
         </div>
         <div className="examHeadCell">
           <span>Mode</span>
-          <strong className={mode === "demo" ? "accent-warn" : "accent-pos"}>{mode.toUpperCase()}</strong>
+          <strong className={mode === "demo" ? "accent-warn" : "accent-pos"}>{(mode.charAt(0).toUpperCase() + mode.slice(1))}</strong>
         </div>
       </div>
 

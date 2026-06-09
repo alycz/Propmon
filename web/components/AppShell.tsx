@@ -22,11 +22,12 @@ export function AppShell({children, statusStrip = true}: Props) {
   return (
     <main className="appShell">
       <header className="topbar">
-        <div className="brand">
-          <p className="eyebrow">Monad Testnet</p>
-          <h1>Propmon</h1>
+        <div className="topbarLeft">
+          <div className="brand">
+            <h1>Propmon</h1>
+          </div>
+          <TopNav />
         </div>
-        <TopNav />
         <div className="topActions">
           <ModeToggle />
           <WalletPill />

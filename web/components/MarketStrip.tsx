@@ -18,7 +18,7 @@ export function MarketStrip() {
         >
           <span className="marketRowSym">{market.symbol}</span>
           <span className="marketRowPrice mono">{formatPrice(price, decimals)}</span>
-          <span className="marketRowMeta">{updatedAt ? new Date(Number(updatedAt) * 1000).toLocaleTimeString() : "no feed"}</span>
+          <span className="marketRowMeta">{updatedAt ? new Date(Number(updatedAt) * 1000).toLocaleTimeString() : "live"}</span>
         </button>
       ))}
     </div>

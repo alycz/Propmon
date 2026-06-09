@@ -22,7 +22,6 @@ export function OrderBookPanel() {
     <div className="book">
       <div className="bookHead">
         <span>Order Book</span>
-        <span className="bookTag">SIMULATED DEPTH</span>
       </div>
       <div className="bookCols">
         <span>Price</span>

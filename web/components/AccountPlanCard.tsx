@@ -1,7 +1,7 @@
 "use client";
 
 import {marketById} from "../lib/config";
-import {formatBps, formatQuote, formatSignedQuote} from "../lib/format";
+import {formatBps, formatQuote, formatSignedQuote, titleCase} from "../lib/format";
 import {Metric, Panel} from "./ui";
 import {usePropmon} from "./PropmonProvider";
 
@@ -17,7 +17,7 @@ export function AccountPlanCard() {
     <Panel title="Propmon Account" eyebrow="Plan = challenge tier, not a subscription">
       <div className="metricRow">
         <Metric label="Account ID" value={accountIdInput ? `#${accountIdInput}` : "—"} />
-        <Metric label="State" value={stateLabel} accent={stateLabel === "FAILED" ? "neg" : stateIndex >= 2 ? "pos" : undefined} />
+        <Metric label="State" value={titleCase(stateLabel)} accent={stateLabel === "FAILED" ? "neg" : stateIndex >= 2 ? "pos" : undefined} />
       </div>
       <div className="metricRow">
         <Metric label="Challenge tier" value={formatQuote(exam?.startingBalance, true)} />
@@ -32,8 +32,8 @@ export function AccountPlanCard() {
         <Metric label="Entries" value={String(entries.length)} />
       </div>
       <div className="metricRow">
-        <Metric label="Rule result" value={ruleResult} accent={ruleResult === "FAILED" ? "neg" : ruleResult === "PASSED" ? "pos" : undefined} />
-        <Metric label="Mode" value={mode.toUpperCase()} accent={mode === "demo" ? "warn" : "pos"} />
+        <Metric label="Rule result" value={titleCase(ruleResult)} accent={ruleResult === "FAILED" ? "neg" : ruleResult === "PASSED" ? "pos" : undefined} />
+        <Metric label="Mode" value={(mode.charAt(0).toUpperCase() + mode.slice(1))} accent={mode === "demo" ? "warn" : "pos"} />
       </div>
     </Panel>
   );

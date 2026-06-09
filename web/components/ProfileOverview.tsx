@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import {formatQuote} from "../lib/format";
+import {formatQuote, titleCase} from "../lib/format";
 import {usePropmon} from "./PropmonProvider";
 
 export function ProfileOverview() {
@@ -24,7 +24,7 @@ export function ProfileOverview() {
         </div>
         <div className="examHeadCell">
           <span>State</span>
-          <strong className={stateBadge(stateLabel)}>{stateLabel}</strong>
+          <strong className={stateBadge(stateLabel)}>{titleCase(stateLabel)}</strong>
         </div>
         <div className="examHeadCell">
           <span>Challenge tier</span>
@@ -32,7 +32,7 @@ export function ProfileOverview() {
         </div>
         <div className="examHeadCell">
           <span>Mode</span>
-          <strong className={mode === "demo" ? "accent-warn" : "accent-pos"}>{mode.toUpperCase()}</strong>
+          <strong className={mode === "demo" ? "accent-warn" : "accent-pos"}>{(mode.charAt(0).toUpperCase() + mode.slice(1))}</strong>
         </div>
       </div>
       <div className="examCta profileLinks">

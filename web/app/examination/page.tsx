@@ -8,7 +8,6 @@ import {DemoScriptPanel} from "../../components/DemoScriptPanel";
 import {ExaminationLedger} from "../../components/ExaminationLedger";
 import {ExaminationOverview} from "../../components/ExaminationOverview";
 import {RuleStatusPanel} from "../../components/RuleStatusPanel";
-import {TierSelector} from "../../components/TierSelector";
 import {TradingSurface} from "../../components/TradingSurface";
 
 export default function ExaminationPage() {
@@ -20,8 +19,7 @@ export default function ExaminationPage() {
 
       <TradingSurface surface="examination" />
 
-      <section className="grid two">
-        <TierSelector />
+      <section className="grid">
         <ChallengeProgress />
       </section>
 
