@@ -56,10 +56,27 @@ It forwards both the JSON `mode` field and `x-propmon-mode` header. The web app 
 
 1. Deploy contracts and fill `shared/deployments.json`, or set the public address env overrides above.
 2. Run the relayer in demo mode so `PerplPriceAdapter` receives deterministic prices.
-3. Start the external Agent 06 service with a user-authorized signer.
+3. Start the Agent API with a user-authorized signer:
+   ```bash
+   AGENT_PRIVATE_KEY=0x... AGENT_ACCOUNT_ID=1 pnpm agent:server
+   ```
 4. Open the public web URL with `?mode=demo`.
 5. Connect wallet, buy a `$10,000` examination, authorize the agent signer, then click `Run demo script`.
 6. After pass, activate funded, use the labeled `DEMO FILL` path, then run payout when the account has profit and no open positions.
+
+## Agent API Status
+
+Agent 08 added the minimal local service expected by `/api/demo-script`:
+
+```http
+POST http://127.0.0.1:8787/demo-script
+content-type: application/json
+x-propmon-mode: demo
+
+{"mode":"demo","accountId":"1"}
+```
+
+Set `NEXT_PUBLIC_AGENT_API_URL` to the deployed Agent API URL for Vercel. The endpoint rejects live mode and requires the supplied account to have authorized the `AGENT_PRIVATE_KEY` signer.
 
 ## Public URL
 

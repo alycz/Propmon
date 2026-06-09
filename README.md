@@ -9,7 +9,7 @@ BUY_EXAM -> EXAMINATION -> PASS -> FUNDED -> PAYOUT
 EXAMINATION -> FAIL -> BUY_EXAM
 ```
 
-This repository is the Agent 00 foundation for the blitz build. It defines the shared repo layout, Monad/Perpl configuration, Solidity interface contracts, deploy ordering, demo-mode contract, and validation scripts that downstream agents build against.
+This repository contains the Propmon Monad Blitz build: contracts, Perpl price relayer, authorized-signer agent, frontend, deployment harness, and Agent 08 integration smoke tooling.
 
 ## Repository Layout
 
@@ -42,8 +42,11 @@ pnpm install
 pnpm build          # TypeScript build plus Foundry build
 pnpm test           # TypeScript checks plus forge test
 pnpm dayzero:public # Public Perpl/Monad validation, no wallet required
+pnpm smoke:demo     # Headless demo E2E smoke after contracts are deployed
+pnpm smoke:live     # Live Perpl price smoke; funded live remains whitelist-gated
 pnpm relayer:dev    # Start relayer workspace in dev mode
 pnpm agent:dev      # Start agent workspace in dev mode
+pnpm agent:server   # Start the Agent API used by the frontend demo button
 pnpm web:dev        # Start Next.js app
 ```
 
@@ -95,13 +98,63 @@ The fixed deployment order is:
 AccountRegistry -> RuleEngine -> PerplPriceAdapter -> ExaminationVault -> FundedVault
 ```
 
-Run the deploy harness after owner implementations exist:
+Run the deploy harness with a Monad Testnet owner key:
 
 ```bash
-pnpm deploy:monad
+OWNER_PRIVATE_KEY=0x... OWNER_ADDRESS=0x... pnpm deploy:monad
 ```
 
-The deploy script writes addresses into `shared/deployments.json`. Agent 00 ships only the harness and interface contract; downstream agents fill concrete implementations and constructor wiring.
+The deploy script writes addresses into `shared/deployments.json`, grants the vault/rule roles, configures Perpl market size decimals, and defaults the funded settlement token to Monad Testnet AUSD from `shared/addresses.json`.
+
+Useful deploy overrides:
+
+```bash
+RELAYER_ADDRESS=0x...
+RECONCILER_ADDRESS=0x...
+PROTOCOL_TREASURY=0x...
+SETTLEMENT_TOKEN_ADDRESS=0xa9012a055bd4e0edff8ce09f960291c09d5322dc
+MAX_PRICE_AGE=300
+TRADER_SHARE_BPS=8000
+```
+
+## Integration Smoke
+
+After deployment, run the deterministic demo loop:
+
+```bash
+OWNER_PRIVATE_KEY=0x... \
+AGENT_PRIVATE_KEY=0x... \
+RELAYER_PRIVATE_KEY=0x... \
+pnpm smoke:demo
+```
+
+The smoke script buys an examination, authorizes the agent signer, pushes deterministic demo prices, verifies a rule-breaching trade rejection, executes the scripted on-chain paper entries, activates funded mode, performs a labeled demo fill round trip, and claims payout. It checks `FundedVault` AUSD liquidity and transfers the missing amount from the owner wallet when the owner has enough AUSD. The default target is `SMOKE_FUNDED_LIQUIDITY=12000000000`.
+
+Run live price validation:
+
+```bash
+OWNER_PRIVATE_KEY=0x... RELAYER_PRIVATE_KEY=0x... pnpm smoke:live
+```
+
+Live smoke pushes current Perpl REST marks into the same on-chain adapter and records that funded live trading remains whitelist-gated unless authenticated Perpl access is available.
+
+Latest smoke output is written to `.context/integration-smoke-last.json`. The submission checklist lives in [docs/INTEGRATION_STATUS.md](docs/INTEGRATION_STATUS.md).
+
+## Agent API
+
+Start the local Agent API that the frontend `Run demo script` button proxies to:
+
+```bash
+AGENT_PRIVATE_KEY=0x... AGENT_ACCOUNT_ID=1 pnpm agent:server
+```
+
+Set the frontend environment:
+
+```bash
+NEXT_PUBLIC_AGENT_API_URL=http://127.0.0.1:8787
+```
+
+The API exposes `POST /demo-script` and only executes demo mode. The submitted account must already exist and must have authorized the agent signer.
 
 ## What Is Real vs Demo
 
