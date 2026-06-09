@@ -166,6 +166,94 @@ a:hover {
   font-weight: 800;
 }
 
+.walletGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  min-width: 0;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.topnavLink {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid #2d383e;
+  border-radius: 8px;
+  color: #aeb9bd;
+  background: #12181c;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.topnavLink:hover {
+  color: #f6f2e8;
+  text-decoration: none;
+}
+
+.topnavLink.active {
+  color: #111715;
+  background: #82e2a8;
+  border-color: #82e2a8;
+}
+
+.statusStrip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  margin: 12px 0;
+  border: 1px solid #263239;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #263239;
+}
+
+.statusCell {
+  display: grid;
+  gap: 4px;
+  padding: 10px 14px;
+  background: #12171b;
+}
+
+.statusCell span {
+  color: #8a949e;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statusCell strong {
+  font-size: 16px;
+  color: #f5f7fa;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.accent-pos {
+  color: #82e2a8;
+}
+
+.accent-neg {
+  color: #ff6262;
+}
+
+.accent-warn {
+  color: #ffd166;
+}
+
 .agentSignerBox {
   display: grid;
   gap: 6px;
@@ -430,6 +518,14 @@ a:hover {
   .marketStrip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  .statusStrip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
@@ -464,5 +560,9 @@ a:hover {
 
   .topbar h1 {
     font-size: 34px;
+  }
+
+  .statusStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
