@@ -59,7 +59,7 @@ Events:
 - Position sizes use per-market size decimals configured by `setMarketSizeDecimals`; MON defaults must be configured as `0` to match `shared/demo-config.json`.
 - The UTC day boundary is `block.timestamp / 1 days`. `dayStartEquity` resets to pre-trade equity on the first accepted entry in a new UTC day bucket.
 - Failure has priority if `IRuleEngine.evaluatePassFail` returns both `passed` and `failed`.
-- `buyExamination` auto-registers the account with `IRuleEngine.configureAccount(accountId, defaultRuleTierId, address(this))`; the examination vault must have the rule engine's account-configuration authority in live deployments.
+- `buyExamination` registers the account through `IAccountRegistry.register(msg.sender)` and then registers the returned account ID with `IRuleEngine.configureAccount(accountId, defaultRuleTierId, address(this))`; the examination vault must have registry `VAULT_ROLE` and the rule engine's account-configuration authority in live deployments.
 
 ## Demo Confirmation
 
@@ -73,4 +73,4 @@ With the seeded test prices, realized P&L exceeds the 10% target on a `100000000
 
 ## Integration Constraint
 
-`IAccountRegistry` currently has no account-registration function. `ExaminationVault` therefore stores exam ownership locally and uses `IAccountRegistry` for authorized signer checks and guarded state transitions only. Agent 05 should either accept vault-created IDs via `setState` or add a coordinated registration API in a future shared-interface revision.
+`IAccountRegistry.register` is now the source of account IDs and registry ownership. `ExaminationVault` still stores examination accounting locally, keyed by the registry-returned account ID.

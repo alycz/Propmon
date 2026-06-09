@@ -4,6 +4,7 @@ pragma solidity ^0.8.28;
 import {Script} from "forge-std/Script.sol";
 import {console2} from "forge-std/console2.sol";
 import {PerplPriceAdapter} from "../src/oracle/PerplPriceAdapter.sol";
+import {AccountRegistry} from "../src/registry/AccountRegistry.sol";
 import {RuleEngine} from "../src/rules/RuleEngine.sol";
 
 interface VmJson {
@@ -50,21 +51,24 @@ contract Deploy is Script {
         // 4. ExaminationVault
         // 5. FundedVault
         //
+        AccountRegistry accountRegistry = new AccountRegistry(deployer);
         RuleEngine ruleEngine = new RuleEngine(deployer);
         PerplPriceAdapter perplPriceAdapter = new PerplPriceAdapter(deployer, relayer);
 
         address examinationVault = _envAddressOr("EXAMINATION_VAULT_ADDRESS", address(0));
         address fundedVault = _envAddressOr("FUNDED_VAULT_ADDRESS", address(0));
         if (examinationVault != address(0)) {
+            accountRegistry.grantRole(accountRegistry.VAULT_ROLE(), examinationVault);
             ruleEngine.grantRole(ruleEngine.ACCOUNT_CONFIG_ROLE(), examinationVault);
         }
         if (fundedVault != address(0)) {
+            accountRegistry.grantRole(accountRegistry.VAULT_ROLE(), fundedVault);
             ruleEngine.grantRole(ruleEngine.ACCOUNT_CONFIG_ROLE(), fundedVault);
         }
 
-        // Concrete constructors and remaining role wiring are owned by Agents 02, 04, and 05.
+        // Concrete vault constructors and remaining role wiring are owned by Agents 02 and 04.
         deployments = DeploymentSet({
-            accountRegistry: address(0),
+            accountRegistry: address(accountRegistry),
             ruleEngine: address(ruleEngine),
             perplPriceAdapter: address(perplPriceAdapter),
             examinationVault: examinationVault,
@@ -72,6 +76,7 @@ contract Deploy is Script {
         });
 
         vm.stopBroadcast();
+        console2.log("AccountRegistry", address(accountRegistry));
         console2.log("RuleEngine", address(ruleEngine));
         console2.log("PerplPriceAdapter", address(perplPriceAdapter));
         console2.log("Relayer", relayer);

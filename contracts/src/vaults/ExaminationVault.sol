@@ -23,7 +23,6 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
 
     uint256 public immutable maxPriceAge;
     uint256 public immutable defaultRuleTierId;
-    uint256 public nextAccountId = 1;
 
     struct Entry {
         uint256 marketId;
@@ -121,7 +120,7 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
         uint256 expectedFee = (accountSize * EXAM_FEE_BPS) / BPS;
         if (msg.value != expectedFee) revert IncorrectFee(expectedFee, msg.value);
 
-        accountId = nextAccountId++;
+        accountId = registry.register(msg.sender);
         uint256 dayBucket = block.timestamp / 1 days;
 
         accounts[accountId] = AccountData({
@@ -135,7 +134,6 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
             committedCollateral: 0
         });
 
-        registry.setState(accountId, IAccountRegistry.AccountState.EXAMINATION);
         ruleEngine.configureAccount(accountId, defaultRuleTierId, address(this));
         emit ExaminationPurchased(accountId, msg.sender, accountSize, msg.value);
     }
