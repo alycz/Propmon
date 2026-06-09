@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+out/
+dist/
+coverage/
+cache/
+artifacts/
+broadcast/
+contracts/cache/
+contracts/out/
+contracts/broadcast/
+*.log
+.DS_Store

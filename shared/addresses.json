@@ -1,0 +1,35 @@
+{
+  "network": "monadTestnet",
+  "chainId": 10143,
+  "rpcUrl": "https://testnet-rpc.monad.xyz",
+  "blockExplorerUrl": "https://testnet.monadscan.com/",
+  "perpl": {
+    "restUrl": "https://testnet.perpl.xyz/api",
+    "wsUrl": "wss://testnet.perpl.xyz",
+    "marketDataWsPath": "/ws/v1/market-data",
+    "tradingWsPath": "/ws/v1/trading",
+    "exchange": "0x1964c32f0be608e7d29302aff5e61268e72080cc",
+    "instanceId": 12,
+    "collateralToken": "0xa9012a055bd4e0edff8ce09f960291c09d5322dc",
+    "collateralSymbol": "AUSD",
+    "collateralDecimals": 6,
+    "minAccountOpenAmount": "100000000",
+    "minDepositAmount": "10000000",
+    "marketStateStream": "market-state@10143",
+    "heartbeatStream": "heartbeat@10143",
+    "markets": {
+      "BTC": { "id": 16, "priceDecimals": 1, "sizeDecimals": 5, "initialMargin": 1000 },
+      "ETH": { "id": 32, "priceDecimals": 2, "sizeDecimals": 3, "initialMargin": 1000 },
+      "SOL": { "id": 48, "priceDecimals": 2, "sizeDecimals": 3, "initialMargin": 1000 },
+      "MON": { "id": 64, "priceDecimals": 5, "sizeDecimals": 0, "initialMargin": 300 },
+      "ZEC": { "id": 256, "priceDecimals": 3, "sizeDecimals": 3, "initialMargin": 300 }
+    }
+  },
+  "proprietaryx": {
+    "examinationVault": null,
+    "fundedVault": null,
+    "accountRegistry": null,
+    "ruleEngine": null,
+    "perplPriceAdapter": null
+  }
+}
