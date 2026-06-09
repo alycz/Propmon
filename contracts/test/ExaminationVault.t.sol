@@ -9,16 +9,24 @@ import {IRuleEngine} from "../src/interfaces/IRuleEngine.sol";
 import {ExaminationVault} from "../src/vaults/ExaminationVault.sol";
 
 contract MockAccountRegistry is IAccountRegistry {
+    uint256 public nextAccountId = 1;
+
     mapping(uint256 accountId => address owner) public owners;
     mapping(uint256 accountId => AccountState state) public states;
     mapping(uint256 accountId => mapping(address signer => bool authorized)) public authorizedSigners;
+
+    function register(address owner) external returns (uint256 accountId) {
+        accountId = nextAccountId++;
+        owners[accountId] = owner;
+        states[accountId] = AccountState.EXAMINATION;
+    }
 
     function ownerOf(uint256 accountId) external view returns (address) {
         return owners[accountId];
     }
 
     function isAuthorizedSigner(uint256 accountId, address signer) external view returns (bool) {
-        return authorizedSigners[accountId][signer];
+        return owners[accountId] == signer || authorizedSigners[accountId][signer];
     }
 
     function stateOf(uint256 accountId) external view returns (AccountState) {
@@ -27,6 +35,14 @@ contract MockAccountRegistry is IAccountRegistry {
 
     function setState(uint256 accountId, AccountState state) external {
         states[accountId] = state;
+    }
+
+    function authorizeSigner(uint256 accountId, address signer) external {
+        authorizedSigners[accountId][signer] = true;
+    }
+
+    function revokeSigner(uint256 accountId, address signer) external {
+        authorizedSigners[accountId][signer] = false;
     }
 
     function setAuthorizedSigner(uint256 accountId, address signer, bool authorized) external {
@@ -223,6 +239,7 @@ contract ExaminationVaultTest is Test {
 
         assertEq(accountId, 1);
         assertEq(address(vault).balance, FEE);
+        assertEq(registry.owners(accountId), trader);
         assertEq(uint256(registry.states(accountId)), uint256(IAccountRegistry.AccountState.EXAMINATION));
         assertEq(ruleEngine.configuredAccountId(), accountId);
         assertEq(ruleEngine.configuredTierId(), DEFAULT_TIER_ID);

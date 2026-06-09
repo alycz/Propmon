@@ -5,6 +5,8 @@ These interfaces are the shared contract between all implementation agents. Trea
 ## Data Flow
 
 ```text
+ExaminationVault.buyExamination
+  -> AccountRegistry.register: guarded owner + EXAMINATION account creation
 Vault
   -> AccountRegistry: owner, authorized signer, current account state
   -> PerplPriceAdapter: on-chain market price
