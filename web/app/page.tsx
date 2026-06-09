@@ -3,7 +3,7 @@ export default function Page() {
     <main className="shell">
       <section className="panel">
         <p className="eyebrow">Monad Testnet</p>
-        <h1>ProprietaryX</h1>
+        <h1>Propmon</h1>
         <p className="lede">Agent 00 scaffold is ready for the examination, relayer, funded vault, registry, agent, and frontend implementation agents.</p>
         <div className="statusGrid">
           <div>

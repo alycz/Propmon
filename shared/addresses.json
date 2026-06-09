@@ -25,7 +25,7 @@
       "ZEC": { "id": 256, "priceDecimals": 3, "sizeDecimals": 3, "initialMargin": 300 }
     }
   },
-  "proprietaryx": {
+  "propmon": {
     "examinationVault": null,
     "fundedVault": null,
     "accountRegistry": null,

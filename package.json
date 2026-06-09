@@ -1,16 +1,16 @@
 {
-  "name": "proprietaryx",
+  "name": "propmon",
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.33.2",
   "scripts": {
-    "build": "pnpm --filter @proprietaryx/relayer build && pnpm --filter @proprietaryx/agent build && forge build --root contracts",
-    "test": "pnpm --filter @proprietaryx/relayer test && pnpm --filter @proprietaryx/agent test && forge test --root contracts",
+    "build": "pnpm --filter @propmon/relayer build && pnpm --filter @propmon/agent build && forge build --root contracts",
+    "test": "pnpm --filter @propmon/relayer test && pnpm --filter @propmon/agent test && forge test --root contracts",
     "dayzero:public": "tsx scripts/dayzero-public.ts",
     "deploy:monad": "forge script contracts/script/Deploy.s.sol:Deploy --root contracts --rpc-url ${MONAD_RPC_URL:-https://testnet-rpc.monad.xyz} --private-key ${OWNER_PRIVATE_KEY} --broadcast",
-    "relayer:dev": "pnpm --filter @proprietaryx/relayer dev",
-    "agent:dev": "pnpm --filter @proprietaryx/agent dev",
-    "web:dev": "pnpm --filter @proprietaryx/web dev"
+    "relayer:dev": "pnpm --filter @propmon/relayer dev",
+    "agent:dev": "pnpm --filter @propmon/agent dev",
+    "web:dev": "pnpm --filter @propmon/web dev"
   },
   "devDependencies": {
     "@types/node": "22.19.20",

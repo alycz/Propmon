@@ -1,6 +1,6 @@
 {
   "mode": "demo",
-  "seed": "proprietaryx-monad-blitz-demo-v1",
+  "seed": "propmon-monad-blitz-demo-v1",
   "timerCompressionFactor": 12,
   "priceSeries": {
     "source": "seeded-deterministic",
