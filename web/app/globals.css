@@ -1,8 +1,8 @@
 :root {
   color-scheme: dark;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #0d1012;
-  color: #f6f2e8;
+  background: #07090b;
+  color: #f5f7fa;
 }
 
 * {
@@ -12,7 +12,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: #0d1012;
+  background: #07090b;
 }
 
 button,
@@ -60,17 +60,18 @@ a:hover {
 }
 
 .topbar h1 {
-  font-size: 42px;
+  font-size: 24px;
   line-height: 1;
+  letter-spacing: -0.01em;
 }
 
 .panel h2 {
-  font-size: 20px;
+  font-size: 17px;
 }
 
 .eyebrow {
   margin: 0 0 8px;
-  color: #82e2a8;
+  color: #836ef9;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -89,28 +90,28 @@ a:hover {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   width: 188px;
-  border: 1px solid #344148;
-  border-radius: 8px;
-  background: #14191d;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  background: #0d1116;
   overflow: hidden;
 }
 
 .modeToggle button {
   height: 42px;
   border: 0;
-  color: #aeb9bd;
+  color: #8a949e;
   background: transparent;
   font-weight: 800;
 }
 
 .modeToggle button.active {
   color: #111715;
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .banner,
 .notice {
-  border-radius: 8px;
+  border-radius: 0;
   padding: 14px 16px;
   margin: 12px 0;
   font-weight: 700;
@@ -126,16 +127,16 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  border: 1px solid #4e5b60;
-  color: #f6f2e8;
-  background: #182025;
+  border: 1px solid #1c252e;
+  color: #f5f7fa;
+  background: #0d1116;
 }
 
 .notice button,
 .primary,
 .secondary {
   min-height: 42px;
-  border-radius: 8px;
+  border-radius: 0;
   border: 1px solid transparent;
   padding: 0 14px;
   font-weight: 800;
@@ -144,45 +145,1347 @@ a:hover {
 .primary {
   width: 100%;
   color: #0b1113;
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .secondary,
 .notice button {
-  color: #f6f2e8;
-  border-color: #3a484f;
-  background: #182126;
+  color: #f5f7fa;
+  border-color: #1c252e;
+  background: #11171c;
 }
 
 .walletPill {
   min-height: 42px;
   display: inline-flex;
   align-items: center;
-  border: 1px solid #3a484f;
-  border-radius: 8px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
   padding: 0 12px;
-  color: #f6f2e8;
-  background: #182126;
+  color: #f5f7fa;
+  background: #11171c;
   font-weight: 800;
+}
+
+.walletGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  min-width: 0;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.topnavLink {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  color: #8a949e;
+  background: #12181c;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.topnavLink:hover {
+  color: #f5f7fa;
+  text-decoration: none;
+}
+
+.topnavLink.active {
+  color: #111715;
+  background: #836ef9;
+  border-color: #836ef9;
+}
+
+.statusStrip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  margin: 12px 0;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  overflow: hidden;
+  background: #1c252e;
+}
+
+.statusCell {
+  display: grid;
+  gap: 4px;
+  padding: 10px 14px;
+  background: #0d1116;
+}
+
+.statusCell span {
+  color: #8a949e;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.statusCell strong {
+  font-size: 16px;
+  color: #f5f7fa;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.accent-pos {
+  color: #836ef9;
+}
+
+.accent-neg {
+  color: #ff6262;
+}
+
+.accent-warn {
+  color: #ffd166;
+}
+
+.linkList {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.linkRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  padding: 10px 12px;
+  background: #11171c;
+}
+
+.linkRow span {
+  color: #8a949e;
+}
+
+.linkRow small {
+  color: #8a949e;
+}
+
+/* ---------- Trading surface ---------- */
+.surface {
+  display: grid;
+  gap: 1px;
+}
+
+/* ---------- Gating: nav lock, modal, demo controls, banners ---------- */
+.topnavLink.locked {
+  color: #6b757c;
+  background: #0c1014;
+  border-color: #161d23;
+  gap: 6px;
+}
+
+.topnavLink.locked:hover {
+  color: #8a949e;
+}
+
+.navLock {
+  display: inline-flex;
+  color: #6b757c;
+}
+
+.topnavLink.unlocked {
+  border-color: #2b2358;
+  box-shadow: inset 0 0 0 1px #2b2358;
+}
+
+.guardedInert {
+  filter: blur(2px) saturate(0.7);
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(4, 6, 8, 0.72);
+  backdrop-filter: blur(2px);
+}
+
+.modalCard {
+  width: min(440px, 100%);
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  background: #0d1116;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.modalLock {
+  display: inline-flex;
+  color: #ffd166;
+}
+
+.modalHead h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #f5f7fa;
+}
+
+.modalBody {
+  padding: 16px;
+  color: #c7d0d6;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.modalBody p {
+  margin: 0;
+}
+
+.modalActions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.modalActions .primary {
+  width: auto;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.modalActions .primary:hover {
+  text-decoration: none;
+}
+
+.modalActions .secondary {
+  flex: 0 0 auto;
+}
+
+.demoControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px dashed #4a4322;
+  border-radius: 0;
+  background: #16140c;
+}
+
+.demoControlsTag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #0b1113;
+  background: #ffd166;
+  padding: 2px 6px;
+  border-radius: 0;
+}
+
+.demoControlsLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a949e;
+}
+
+.demoControlsBtns {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.demoStep {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  background: #11171c;
+  color: #8a949e;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.demoStep.active {
+  color: #0b1113;
+  background: #ffd166;
+  border-color: #ffd166;
+}
+
+.demoStep.clear {
+  color: #8fd7ff;
+}
+
+.demoControlsNote {
+  font-size: 11px;
+  color: #8a949e;
+  margin-left: auto;
+}
+
+.gateBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 11px 14px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
+.gateBanner.buy {
+  border-color: #4a4322;
+  background: #16140c;
+  color: #ffd166;
+}
+
+.gateBanner.fail {
+  border-color: #4a2424;
+  background: #160c0c;
+  color: #ff9a9a;
+}
+
+.gateBanner.pass {
+  border-color: #2b2358;
+  background: #100b26;
+  color: #836ef9;
+}
+
+.gateBannerCta {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* ---------- Execution panel (Human / Agentic) ---------- */
+.execPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* The active mode (ticket or chat) fills the panel and scrolls internally so
+   the execution column never grows taller than the chart. */
+.execPanel > .ticket {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.execPanel > .agentChat {
+  flex: 1;
+  min-height: 0;
+}
+
+.execHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.execLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a949e;
+}
+
+.execSelect {
+  height: 30px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  background: #11171c;
+  color: #f5f7fa;
+  padding: 0 8px;
+  font-weight: 700;
+}
+
+/* ---------- Agent chat ---------- */
+.agentChat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 12px;
+  gap: 10px;
+}
+
+.agentChatHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.agentChatTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agentChatTitle strong {
+  font-size: 14px;
+  color: #f5f7fa;
+}
+
+.agentChatSub {
+  font-size: 11px;
+  color: #8a949e;
+}
+
+.agentPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #8a949e;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.agentPillDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #8a949e;
+}
+
+.agentPill.live {
+  color: #836ef9;
+  border-color: #2b2358;
+  background: #100b26;
+}
+
+.agentPill.live .agentPillDot {
+  background: #836ef9;
+  box-shadow: 0 0 6px #836ef9;
+}
+
+.agentThread {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 2px;
+}
+
+.agentEmpty {
+  margin: auto 0;
+  text-align: center;
+  color: #8a949e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.bubble {
+  max-width: 88%;
+  padding: 8px 10px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.bubble.agent {
+  align-self: flex-start;
+  background: #11171c;
+  color: #e4ebef;
+}
+
+.bubble.user {
+  align-self: flex-end;
+  background: #181233;
+  border-color: #2b2358;
+  color: #f5f7fa;
+}
+
+.bubble.strategyBubble {
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.bubble.thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #8a949e;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #8a949e 0%, #f5f7fa 50%, #8a949e 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 1.4s linear infinite;
+  font-weight: 700;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #8a949e;
+  animation: dotPulse 1.2s infinite ease-in-out;
+}
+
+.dots i:nth-child(2) { animation-delay: 0.18s; }
+.dots i:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes dotPulse {
+  0%, 60%, 100% { opacity: 0.25; }
+  30% { opacity: 1; }
+}
+
+/* Strategy card */
+.strategyCard {
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  background: #0d1116;
+  padding: 10px;
+}
+
+.strategyHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.strategyName {
+  font-size: 12px;
+  font-weight: 800;
+  color: #f5f7fa;
+}
+
+.strategyTag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #8fd7ff;
+  border: 1px solid #1c3540;
+  border-radius: 0;
+  padding: 1px 5px;
+}
+
+.strategyRows {
+  margin: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.strategyRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11.5px;
+}
+
+.strategyRow dt {
+  color: #8a949e;
+}
+
+.strategyRow dd {
+  margin: 0;
+  color: #e4ebef;
+  text-align: right;
+}
+
+.strategyPrompt {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  color: #c7d0d6;
+}
+
+.strategyActions {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.strategyActions .primary {
+  width: 100%;
+}
+
+/* Agent activity readout */
+.agentActivity {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  overflow: hidden;
+  background: #1c252e;
+}
+
+.agentStat {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  background: #0d1116;
+}
+
+.agentStat span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a949e;
+}
+
+.agentStat strong {
+  font-size: 14px;
+  color: #f5f7fa;
+}
+
+.agentControls {
+  display: grid;
+  gap: 8px;
+}
+
+.agentInput {
+  width: 100%;
+  height: 38px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  padding: 0 10px;
+  background: #080a0d;
+  color: #8a949e;
+  font-size: 12px;
+}
+
+.agentLiveNote {
+  margin: 0;
+  font-size: 11px;
+  color: #8a949e;
+  line-height: 1.45;
+}
+
+/* ---------- Terminal (exchange) layout ---------- */
+/* One connected, bordered grid. The 1px gaps show the shared border colour as
+   hairlines, so every panel reads as part of a single dense exchange surface. */
+.terminal {
+  display: grid;
+  gap: 1px;
+  border: 1px solid #1c252e;
+  background: #1c252e;
+  overflow: hidden;
+}
+
+.terminalTop {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr) 248px 300px;
+  gap: 1px;
+  background: transparent;
+  /* Fixed to the chart-section height (chart canvas 360 + controls + footnote)
+     so the execution column can't grow taller than the chart — every other
+     cell fills this height and scrolls internally, removing empty padding. */
+  height: 446px;
+}
+
+.terminalCell {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #0d1116;
+}
+
+.terminalBottom {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1px;
+  background: transparent;
+}
+
+/* Market list */
+.marketList {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.marketListHead,
+.bookHead,
+.densePanelHead .eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a949e;
+}
+
+.marketListHead {
+  padding: 10px 12px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.marketRow {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 1px solid #141b21;
+  background: transparent;
+  color: #c7d0d6;
+}
+
+.marketRow:hover {
+  background: #11171c;
+}
+
+.marketRow.active {
+  background: #15103a;
+  box-shadow: inset 2px 0 0 #836ef9;
+}
+
+.marketRowSym {
+  font-weight: 800;
+  color: #f5f7fa;
+}
+
+.marketRowPrice {
+  font-size: 13px;
+  color: #e4ebef;
+}
+
+.marketRowMeta {
+  font-size: 10px;
+  color: #8a949e;
+}
+
+/* Chart */
+.chartPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: 10px 12px;
+}
+
+.chartControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.chartTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chartTitle strong {
+  font-size: 18px;
+  color: #f5f7fa;
+}
+
+.chartAgentTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #836ef9;
+  border: 1px solid #2b2358;
+  background: #100b26;
+  padding: 2px 7px;
+  border-radius: 0;
+}
+
+.chartFeedTag,
+.bookTag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #ffd166;
+  border: 1px solid #4a4322;
+  background: #1d1a10;
+  padding: 2px 6px;
+  border-radius: 0;
+}
+
+.timeframes {
+  display: flex;
+  gap: 4px;
+}
+
+.tf {
+  height: 26px;
+  min-width: 34px;
+  padding: 0 8px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  background: #11171c;
+  color: #8a949e;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tf.active {
+  color: #0b1113;
+  background: #836ef9;
+  border-color: #836ef9;
+}
+
+.chartWrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.chartSymbol {
+  font-size: 13px;
+  color: #8a949e;
+}
+
+.chartMark {
+  font-size: 15px;
+  color: #836ef9;
+}
+
+.chartCanvas {
+  width: 100%;
+  border: 1px solid #161d23;
+  border-radius: 0;
+}
+
+.chartLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8a949e;
+  height: 360px;
+}
+
+.chartFootnote {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: #8a949e;
+}
+
+/* Order book */
+.book {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 12px;
+}
+
+.bookHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.bookCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 6px 12px;
+  color: #8a949e;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.bookSide {
+  display: flex;
+  flex-direction: column;
+}
+
+.bookSide.asks {
+  justify-content: flex-end;
+}
+
+.bookRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 2px 12px;
+  overflow: hidden;
+}
+
+.bookDepth {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  z-index: 0;
+}
+
+.bookRow.ask .bookDepth {
+  background: rgba(255, 98, 98, 0.1);
+}
+
+.bookRow.bid .bookDepth {
+  background: rgba(131, 110, 249, 0.1);
+}
+
+.bookRow span {
+  position: relative;
+  z-index: 1;
+}
+
+.bookSize,
+.bookTotal {
+  text-align: right;
+  color: #c7d0d6;
+}
+
+.bookMid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 12px;
+  border-top: 1px solid #1c252e;
+  border-bottom: 1px solid #1c252e;
+  font-size: 14px;
+  font-weight: 800;
+  color: #f5f7fa;
+}
+
+.bookSpread {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8a949e;
+}
+
+/* Trade ticket */
+.ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  height: 100%;
+}
+
+.ticketHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.ticketMarket {
+  font-size: 16px;
+  font-weight: 800;
+  color: #f5f7fa;
+}
+
+.ticketMark {
+  font-size: 14px;
+  color: #8fd7ff;
+}
+
+.sideToggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.sideBtn {
+  height: 40px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  background: #11171c;
+  color: #8a949e;
+  font-weight: 800;
+}
+
+.sideBtn.long.active {
+  color: #0b1113;
+  background: #836ef9;
+  border-color: #836ef9;
+}
+
+.sideBtn.short.active {
+  color: #1a0b0b;
+  background: #ff6262;
+  border-color: #ff6262;
+}
+
+.ticket .field {
+  margin: 0;
+}
+
+.ticketNote {
+  margin: 0;
+  font-size: 11px;
+  color: #8a949e;
+  line-height: 1.4;
+}
+
+.ticketDivider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid #1c252e;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a949e;
+}
+
+.pill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 0;
+  letter-spacing: 0.03em;
+}
+
+.pill.pos {
+  color: #0b1113;
+  background: #836ef9;
+}
+
+.pill.muted {
+  color: #8a949e;
+  border: 1px solid #1c252e;
+}
+
+.secondary.full {
+  width: 100%;
+}
+
+/* Dense bottom panels — flush (no own border) so they connect via the
+   grid's 1px hairline gaps into one continuous surface. */
+.densePanel {
+  padding: 0;
+  border: 0;
+}
+
+.densePanelHead {
+  padding: 12px 14px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.densePanelHead h2 {
+  margin: 2px 0 0;
+  font-size: 16px;
+}
+
+.densePanel .metricRow,
+.densePanel .buttonRow {
+  margin: 12px 14px;
+}
+
+.densePanel .timeline {
+  margin: 12px 14px;
+}
+
+.ledgerTable {
+  display: flex;
+  flex-direction: column;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.ledgerHead,
+.ledgerLine {
+  display: grid;
+  grid-template-columns: 0.8fr 1fr 1fr 1fr 0.7fr;
+  gap: 8px;
+  padding: 8px 14px;
+  align-items: center;
+}
+
+.ledgerHead {
+  position: sticky;
+  top: 0;
+  background: #0e141a;
+  color: #8a949e;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #1c252e;
+}
+
+.ledgerLine {
+  border-bottom: 1px solid #141b21;
+  font-size: 12px;
+}
+
+.ledgerTable .helper {
+  padding: 12px 14px;
+  margin: 0;
+}
+
+/* ---------- Examination ---------- */
+.examHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  background: #0d1116;
+}
+
+.examHeaderInfo {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.examHeadCell {
+  display: grid;
+  gap: 4px;
+}
+
+.examHeadCell span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a949e;
+}
+
+.examHeadCell strong {
+  font-size: 18px;
+  color: #f5f7fa;
+}
+
+.examCta .cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 180px;
+  padding: 0 22px;
+  text-decoration: none;
+}
+
+.profileLinks {
+  display: flex;
+  gap: 8px;
+}
+
+.examCta .cta:hover {
+  text-decoration: none;
+}
+
+.anchorPanel {
+  position: relative;
+}
+
+.anchor {
+  position: absolute;
+  top: -90px;
+}
+
+.progressBlock {
+  margin: 16px 0;
+}
+
+.progressLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #c7d0d6;
+}
+
+.progressTrack {
+  height: 14px;
+  border-radius: 0;
+  overflow: hidden;
+  background: #1a2128;
+  border: 1px solid #1c252e;
+}
+
+.progressFill {
+  height: 100%;
+  min-width: 4px;
+  background: #8fd7ff;
+  transition: width 240ms ease;
+}
+
+.progressFill.done {
+  background: #836ef9;
+}
+
+.ruleList {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.ruleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  padding: 12px;
+  background: #11171c;
+}
+
+.ruleRow strong {
+  color: #f5f7fa;
+}
+
+.ruleRow .helper {
+  margin: 4px 0 0;
+}
+
+.stateMachine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin: 16px 0 6px;
+  flex-wrap: wrap;
+}
+
+.stateStep {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #8a949e;
+}
+
+.stateDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #1c252e;
+}
+
+.stateStep.active {
+  color: #836ef9;
+}
+
+.stateStep.active .stateDot {
+  background: #836ef9;
+}
+
+.stateStep.cleared .stateDot {
+  background: #463a78;
+}
+
+.examLedgerCols {
+  grid-template-columns: 0.8fr 0.7fr 1fr 1fr 1fr 0.7fr;
+}
+
+@media (max-width: 1200px) {
+  .terminalTop {
+    grid-template-columns: 1fr 1fr;
+    height: auto;
+  }
+
+  .terminalChart {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .terminalCell {
+    min-height: 280px;
+  }
+
+  .terminalBottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .terminalTop {
+    grid-template-columns: 1fr;
+  }
 }
 
 .agentSignerBox {
   display: grid;
   gap: 6px;
-  border: 1px solid #344148;
-  border-radius: 8px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
   padding: 12px;
-  background: #11171b;
+  background: #0d1116;
 }
 
 .agentSignerBox span,
 .agentSignerBox small {
-  color: #aeb9bd;
+  color: #8a949e;
 }
 
 .agentSignerBox a,
 .agentSignerBox strong {
-  color: #f6f2e8;
+  color: #f5f7fa;
   font-size: 18px;
 }
 
@@ -198,16 +1501,16 @@ a:hover {
   gap: 4px;
   min-height: 88px;
   text-align: left;
-  border: 1px solid #2d383e;
-  border-radius: 8px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
   padding: 12px;
   color: #dce3df;
-  background: #13181c;
+  background: #0d1116;
 }
 
 .marketPill.active {
-  border-color: #82e2a8;
-  background: #17231d;
+  border-color: #836ef9;
+  background: #15103a;
 }
 
 .marketPill span,
@@ -218,11 +1521,11 @@ a:hover {
 .helper,
 .scriptList,
 .marketPill small {
-  color: #a9b4b7;
+  color: #8a949e;
 }
 
 .marketPill strong {
-  color: #f6f2e8;
+  color: #f5f7fa;
   font-size: 18px;
 }
 
@@ -242,10 +1545,10 @@ a:hover {
 
 .panel {
   min-width: 0;
-  border: 1px solid #263239;
-  border-radius: 8px;
-  padding: 18px;
-  background: #12171b;
+  border: 1px solid #1c252e;
+  border-radius: 0;
+  padding: 16px;
+  background: #0d1116;
 }
 
 .tierGrid,
@@ -279,11 +1582,11 @@ a:hover {
 .tier,
 .metric {
   min-height: 82px;
-  border: 1px solid #2d383e;
-  border-radius: 8px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
   padding: 12px;
-  color: #f6f2e8;
-  background: #171d21;
+  color: #f5f7fa;
+  background: #11171c;
 }
 
 .tier {
@@ -293,7 +1596,7 @@ a:hover {
 }
 
 .tier.active {
-  border-color: #82e2a8;
+  border-color: #836ef9;
 }
 
 .metric {
@@ -303,7 +1606,7 @@ a:hover {
 }
 
 .metric strong {
-  color: #f6f2e8;
+  color: #f5f7fa;
   font-size: 20px;
   overflow-wrap: anywhere;
 }
@@ -318,11 +1621,11 @@ a:hover {
 .field select {
   width: 100%;
   height: 42px;
-  border: 1px solid #344148;
-  border-radius: 8px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
   padding: 0 12px;
-  color: #f6f2e8;
-  background: #0e1316;
+  color: #f5f7fa;
+  background: #080a0d;
 }
 
 .helper {
@@ -349,10 +1652,10 @@ a:hover {
 }
 
 .meterTrack {
-  height: 18px;
-  border-radius: 999px;
+  height: 14px;
+  border-radius: 0;
   overflow: hidden;
-  background: #222a2f;
+  background: #1a2128;
 }
 
 .meterTrack div {
@@ -363,7 +1666,7 @@ a:hover {
 }
 
 .meter.safe .meterTrack div {
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .meter.warning .meterTrack div {
@@ -388,10 +1691,10 @@ a:hover {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  border: 1px solid #28343a;
-  border-radius: 8px;
+  border: 1px solid #1c252e;
+  border-radius: 0;
   padding: 12px;
-  background: #171d21;
+  background: #11171c;
 }
 
 .ledgerRow > div,
@@ -415,7 +1718,7 @@ a:hover {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  color: #a9b4b7;
+  color: #8a949e;
   font-size: 13px;
   padding: 12px 0 4px;
 }
@@ -429,6 +1732,14 @@ a:hover {
 
   .marketStrip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  .statusStrip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -463,6 +1774,10 @@ a:hover {
   }
 
   .topbar h1 {
-    font-size: 34px;
+    font-size: 22px;
+  }
+
+  .statusStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

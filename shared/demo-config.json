@@ -24,7 +24,7 @@
   },
   "fundedDemo": {
     "label": "DEMO FILL",
-    "profitSplitBps": { "trader": 8000, "protocol": 2000 },
+    "profitSplitBps": { "trader": 8500, "protocol": 1500 },
     "settlementSource": "PerplPriceAdapter"
   }
 }

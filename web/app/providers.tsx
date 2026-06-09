@@ -3,10 +3,12 @@
 import {PrivyProvider} from "@privy-io/react-auth";
 import {createConfig, WagmiProvider} from "@privy-io/wagmi";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {useState, type ReactNode} from "react";
+import {Suspense, useState, type ReactNode} from "react";
 import {http} from "wagmi";
 
 import {monadTestnet} from "../lib/config";
+import {PropmonProvider} from "../components/PropmonProvider";
+import {AgentDemoProvider} from "../components/AgentDemoProvider";
 
 const buildSafePrivyAppId = "clpropmonmissingappid0000";
 
@@ -40,7 +42,13 @@ export function Providers({children}: {children: ReactNode}) {
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiConfig}>{children}</WagmiProvider>
+        <WagmiProvider config={wagmiConfig}>
+          <Suspense fallback={null}>
+            <PropmonProvider>
+              <AgentDemoProvider>{children}</AgentDemoProvider>
+            </PropmonProvider>
+          </Suspense>
+        </WagmiProvider>
       </QueryClientProvider>
     </PrivyProvider>
   );
