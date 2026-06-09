@@ -326,6 +326,325 @@ a:hover {
   color: #8a949e;
 }
 
+/* ---------- Execution panel (Human / Agentic) ---------- */
+.execPanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.execHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.execLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a949e;
+}
+
+.execSelect {
+  height: 30px;
+  border: 1px solid #1c252e;
+  border-radius: 2px;
+  background: #11171c;
+  color: #f5f7fa;
+  padding: 0 8px;
+  font-weight: 700;
+}
+
+/* ---------- Agent chat ---------- */
+.agentChat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 460px;
+  padding: 12px;
+  gap: 10px;
+}
+
+.agentChatHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.agentChatTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agentChatTitle strong {
+  font-size: 14px;
+  color: #f5f7fa;
+}
+
+.agentChatSub {
+  font-size: 11px;
+  color: #8a949e;
+}
+
+.agentPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #8a949e;
+  border: 1px solid #1c252e;
+  border-radius: 2px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.agentPillDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #8a949e;
+}
+
+.agentPill.live {
+  color: #82e2a8;
+  border-color: #1d3a2a;
+  background: #0c1612;
+}
+
+.agentPill.live .agentPillDot {
+  background: #82e2a8;
+  box-shadow: 0 0 6px #82e2a8;
+}
+
+.agentThread {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 2px;
+}
+
+.agentEmpty {
+  margin: auto 0;
+  text-align: center;
+  color: #8a949e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.bubble {
+  max-width: 88%;
+  padding: 8px 10px;
+  border: 1px solid #1c252e;
+  border-radius: 3px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.bubble.agent {
+  align-self: flex-start;
+  background: #11171c;
+  color: #e4ebef;
+}
+
+.bubble.user {
+  align-self: flex-end;
+  background: #14201a;
+  border-color: #1d3a2a;
+  color: #f5f7fa;
+}
+
+.bubble.strategyBubble {
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.bubble.thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #8a949e;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #8a949e 0%, #f5f7fa 50%, #8a949e 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 1.4s linear infinite;
+  font-weight: 700;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #8a949e;
+  animation: dotPulse 1.2s infinite ease-in-out;
+}
+
+.dots i:nth-child(2) { animation-delay: 0.18s; }
+.dots i:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes dotPulse {
+  0%, 60%, 100% { opacity: 0.25; }
+  30% { opacity: 1; }
+}
+
+/* Strategy card */
+.strategyCard {
+  border: 1px solid #1c252e;
+  border-radius: 3px;
+  background: #0d1116;
+  padding: 12px;
+}
+
+.strategyHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.strategyName {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f5f7fa;
+}
+
+.strategyTag {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #8fd7ff;
+  border: 1px solid #1c3540;
+  border-radius: 2px;
+  padding: 2px 6px;
+}
+
+.strategyRows {
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.strategyRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.strategyRow dt {
+  color: #8a949e;
+}
+
+.strategyRow dd {
+  margin: 0;
+  color: #e4ebef;
+  text-align: right;
+}
+
+.strategyRisk {
+  margin: 10px 0 0;
+  font-size: 11px;
+  color: #ffd166;
+}
+
+.strategyPrompt {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #c7d0d6;
+}
+
+.strategyActions {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.strategyActions .primary {
+  width: 100%;
+}
+
+/* Agent activity readout */
+.agentActivity {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  border: 1px solid #1c252e;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #1c252e;
+}
+
+.agentStat {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  background: #0d1116;
+}
+
+.agentStat span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a949e;
+}
+
+.agentStat strong {
+  font-size: 14px;
+  color: #f5f7fa;
+}
+
+.agentControls {
+  display: grid;
+  gap: 8px;
+}
+
+.agentInput {
+  width: 100%;
+  height: 38px;
+  border: 1px solid #1c252e;
+  border-radius: 2px;
+  padding: 0 10px;
+  background: #080a0d;
+  color: #8a949e;
+  font-size: 12px;
+}
+
+.agentLiveNote {
+  margin: 0;
+  font-size: 11px;
+  color: #8a949e;
+  line-height: 1.45;
+}
+
 /* ---------- Terminal (exchange) layout ---------- */
 .terminal {
   display: grid;

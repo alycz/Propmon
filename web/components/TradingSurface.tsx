@@ -3,6 +3,7 @@
 import {useState} from "react";
 
 import {marketById} from "../lib/config";
+import {ExecutionPanel} from "./ExecutionPanel";
 import {FundedEventsPanel} from "./FundedEventsPanel";
 import {MarketStrip} from "./MarketStrip";
 import {OrderBookPanel} from "./OrderBookPanel";
@@ -10,7 +11,6 @@ import {PriceChart} from "./PriceChart";
 import {usePropmon} from "./PropmonProvider";
 import {TerminalLedger} from "./TerminalLedger";
 import {TerminalShell} from "./TerminalShell";
-import {TradeTicket} from "./TradeTicket";
 
 export type SurfaceKind = "examination" | "terminal";
 
@@ -67,7 +67,7 @@ export function TradingSurface({surface}: {surface: SurfaceKind}) {
           </div>
         }
         book={<OrderBookPanel />}
-        ticket={<TradeTicket />}
+        ticket={<ExecutionPanel surface={surface} />}
         ledger={<TerminalLedger />}
         events={<FundedEventsPanel />}
       />
