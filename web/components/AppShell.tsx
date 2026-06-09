@@ -17,7 +17,7 @@ type Props = {
 
 export function AppShell({children, statusStrip = true}: Props) {
   const {core, actions} = usePropmon();
-  const {mode, ready, onWrongChain, switchingChain, setSwitchingChain, ensureMonadTestnet} = core;
+  const {ready, onWrongChain, switchingChain, setSwitchingChain, ensureMonadTestnet} = core;
 
   return (
     <main className="appShell">
@@ -32,12 +32,6 @@ export function AppShell({children, statusStrip = true}: Props) {
           <WalletPill />
         </div>
       </header>
-
-      {mode === "demo" && (
-        <section className="banner">
-          DEMO MODE — simulated prices &amp; demo fills. The examination ledger is still real on-chain.
-        </section>
-      )}
 
       {onWrongChain && (
         <section className="notice">

@@ -71,7 +71,7 @@ a:hover {
 
 .eyebrow {
   margin: 0 0 8px;
-  color: #82e2a8;
+  color: #836ef9;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -91,7 +91,7 @@ a:hover {
   grid-template-columns: repeat(2, 1fr);
   width: 188px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   background: #0d1116;
   overflow: hidden;
 }
@@ -106,12 +106,12 @@ a:hover {
 
 .modeToggle button.active {
   color: #111715;
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .banner,
 .notice {
-  border-radius: 3px;
+  border-radius: 0;
   padding: 14px 16px;
   margin: 12px 0;
   font-weight: 700;
@@ -136,7 +136,7 @@ a:hover {
 .primary,
 .secondary {
   min-height: 42px;
-  border-radius: 3px;
+  border-radius: 0;
   border: 1px solid transparent;
   padding: 0 14px;
   font-weight: 800;
@@ -145,7 +145,7 @@ a:hover {
 .primary {
   width: 100%;
   color: #0b1113;
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .secondary,
@@ -160,7 +160,7 @@ a:hover {
   display: inline-flex;
   align-items: center;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 0 12px;
   color: #f5f7fa;
   background: #11171c;
@@ -190,7 +190,7 @@ a:hover {
   height: 38px;
   padding: 0 16px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   color: #8a949e;
   background: #12181c;
   font-weight: 800;
@@ -204,8 +204,8 @@ a:hover {
 
 .topnavLink.active {
   color: #111715;
-  background: #82e2a8;
-  border-color: #82e2a8;
+  background: #836ef9;
+  border-color: #836ef9;
 }
 
 .statusStrip {
@@ -214,7 +214,7 @@ a:hover {
   gap: 1px;
   margin: 12px 0;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   overflow: hidden;
   background: #1c252e;
 }
@@ -244,7 +244,7 @@ a:hover {
 }
 
 .accent-pos {
-  color: #82e2a8;
+  color: #836ef9;
 }
 
 .accent-neg {
@@ -267,7 +267,7 @@ a:hover {
   justify-content: space-between;
   gap: 12px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 10px 12px;
   background: #11171c;
 }
@@ -283,47 +283,7 @@ a:hover {
 /* ---------- Trading surface ---------- */
 .surface {
   display: grid;
-  gap: 12px;
-}
-
-.surfaceBadge {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 9px 14px;
-  border: 1px solid #1c252e;
-  border-radius: 3px;
-  background: #0d1116;
-}
-
-.surfaceBadge.exam {
-  border-color: #4a4322;
-  background: #16140c;
-}
-
-.surfaceBadge.funded {
-  border-color: #1d3a2a;
-  background: #0c1612;
-}
-
-.surfaceBadgeLabel {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-}
-
-.surfaceBadge.exam .surfaceBadgeLabel {
-  color: #ffd166;
-}
-
-.surfaceBadge.funded .surfaceBadgeLabel {
-  color: #82e2a8;
-}
-
-.surfaceBadgeNote {
-  font-size: 12px;
-  color: #8a949e;
+  gap: 1px;
 }
 
 /* ---------- Gating: nav lock, modal, demo controls, banners ---------- */
@@ -344,8 +304,8 @@ a:hover {
 }
 
 .topnavLink.unlocked {
-  border-color: #1d3a2a;
-  box-shadow: inset 0 0 0 1px #1d3a2a;
+  border-color: #2b2358;
+  box-shadow: inset 0 0 0 1px #2b2358;
 }
 
 .guardedInert {
@@ -370,7 +330,7 @@ a:hover {
 .modalCard {
   width: min(440px, 100%);
   border: 1px solid #1c252e;
-  border-radius: 4px;
+  border-radius: 0;
   background: #0d1116;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
 }
@@ -436,7 +396,7 @@ a:hover {
   margin: 0 0 12px;
   padding: 8px 12px;
   border: 1px dashed #4a4322;
-  border-radius: 3px;
+  border-radius: 0;
   background: #16140c;
 }
 
@@ -447,7 +407,7 @@ a:hover {
   color: #0b1113;
   background: #ffd166;
   padding: 2px 6px;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .demoControlsLabel {
@@ -467,7 +427,7 @@ a:hover {
   height: 26px;
   padding: 0 10px;
   border: 1px solid #1c252e;
-  border-radius: 2px;
+  border-radius: 0;
   background: #11171c;
   color: #8a949e;
   font-size: 11px;
@@ -498,7 +458,7 @@ a:hover {
   flex-wrap: wrap;
   padding: 11px 14px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   margin-bottom: 14px;
   font-size: 13px;
 }
@@ -516,9 +476,9 @@ a:hover {
 }
 
 .gateBanner.pass {
-  border-color: #1d3a2a;
-  background: #0c1612;
-  color: #82e2a8;
+  border-color: #2b2358;
+  background: #100b26;
+  color: #836ef9;
 }
 
 .gateBannerCta {
@@ -530,7 +490,21 @@ a:hover {
 .execPanel {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+/* The active mode (ticket or chat) fills the panel and scrolls internally so
+   the execution column never grows taller than the chart. */
+.execPanel > .ticket {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.execPanel > .agentChat {
+  flex: 1;
+  min-height: 0;
 }
 
 .execHead {
@@ -552,7 +526,7 @@ a:hover {
 .execSelect {
   height: 30px;
   border: 1px solid #1c252e;
-  border-radius: 2px;
+  border-radius: 0;
   background: #11171c;
   color: #f5f7fa;
   padding: 0 8px;
@@ -563,8 +537,7 @@ a:hover {
 .agentChat {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 460px;
+  min-height: 0;
   padding: 12px;
   gap: 10px;
 }
@@ -601,7 +574,7 @@ a:hover {
   letter-spacing: 0.02em;
   color: #8a949e;
   border: 1px solid #1c252e;
-  border-radius: 2px;
+  border-radius: 0;
   padding: 3px 8px;
   white-space: nowrap;
 }
@@ -614,19 +587,19 @@ a:hover {
 }
 
 .agentPill.live {
-  color: #82e2a8;
-  border-color: #1d3a2a;
-  background: #0c1612;
+  color: #836ef9;
+  border-color: #2b2358;
+  background: #100b26;
 }
 
 .agentPill.live .agentPillDot {
-  background: #82e2a8;
-  box-shadow: 0 0 6px #82e2a8;
+  background: #836ef9;
+  box-shadow: 0 0 6px #836ef9;
 }
 
 .agentThread {
   flex: 1;
-  min-height: 200px;
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -646,7 +619,7 @@ a:hover {
   max-width: 88%;
   padding: 8px 10px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   font-size: 12.5px;
   line-height: 1.45;
 }
@@ -659,8 +632,8 @@ a:hover {
 
 .bubble.user {
   align-self: flex-end;
-  background: #14201a;
-  border-color: #1d3a2a;
+  background: #181233;
+  border-color: #2b2358;
   color: #f5f7fa;
 }
 
@@ -717,9 +690,9 @@ a:hover {
 /* Strategy card */
 .strategyCard {
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   background: #0d1116;
-  padding: 12px;
+  padding: 10px;
 }
 
 .strategyHead {
@@ -727,11 +700,11 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .strategyName {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   color: #f5f7fa;
 }
@@ -742,14 +715,14 @@ a:hover {
   letter-spacing: 0.06em;
   color: #8fd7ff;
   border: 1px solid #1c3540;
-  border-radius: 2px;
-  padding: 2px 6px;
+  border-radius: 0;
+  padding: 1px 5px;
 }
 
 .strategyRows {
   margin: 0;
   display: grid;
-  gap: 5px;
+  gap: 3px;
 }
 
 .strategyRow {
@@ -757,7 +730,7 @@ a:hover {
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  font-size: 12px;
+  font-size: 11.5px;
 }
 
 .strategyRow dt {
@@ -770,15 +743,9 @@ a:hover {
   text-align: right;
 }
 
-.strategyRisk {
-  margin: 10px 0 0;
-  font-size: 11px;
-  color: #ffd166;
-}
-
 .strategyPrompt {
   margin: 8px 0 0;
-  font-size: 12px;
+  font-size: 11.5px;
   color: #c7d0d6;
 }
 
@@ -786,7 +753,7 @@ a:hover {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .strategyActions .primary {
@@ -799,7 +766,7 @@ a:hover {
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   overflow: hidden;
   background: #1c252e;
 }
@@ -832,7 +799,7 @@ a:hover {
   width: 100%;
   height: 38px;
   border: 1px solid #1c252e;
-  border-radius: 2px;
+  border-radius: 0;
   padding: 0 10px;
   background: #080a0d;
   color: #8a949e;
@@ -847,30 +814,41 @@ a:hover {
 }
 
 /* ---------- Terminal (exchange) layout ---------- */
+/* One connected, bordered grid. The 1px gaps show the shared border colour as
+   hairlines, so every panel reads as part of a single dense exchange surface. */
 .terminal {
   display: grid;
-  gap: 12px;
+  gap: 1px;
+  border: 1px solid #1c252e;
+  background: #1c252e;
+  overflow: hidden;
 }
 
 .terminalTop {
   display: grid;
   grid-template-columns: 200px minmax(0, 1fr) 248px 300px;
   gap: 1px;
-  border: 1px solid #1c252e;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #1c252e;
+  background: transparent;
+  /* Fixed to the chart-section height (chart canvas 360 + controls + footnote)
+     so the execution column can't grow taller than the chart — every other
+     cell fills this height and scrolls internally, removing empty padding. */
+  height: 446px;
 }
 
 .terminalCell {
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: #0d1116;
 }
 
 .terminalBottom {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
-  gap: 12px;
+  gap: 1px;
+  background: transparent;
 }
 
 /* Market list */
@@ -910,8 +888,8 @@ a:hover {
 }
 
 .marketRow.active {
-  background: #11201a;
-  box-shadow: inset 2px 0 0 #82e2a8;
+  background: #15103a;
+  box-shadow: inset 2px 0 0 #836ef9;
 }
 
 .marketRowSym {
@@ -933,7 +911,7 @@ a:hover {
 .chartPanel {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 0 0 auto;
   padding: 10px 12px;
 }
 
@@ -963,11 +941,11 @@ a:hover {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.03em;
-  color: #82e2a8;
-  border: 1px solid #1d3a2a;
-  background: #0c1612;
+  color: #836ef9;
+  border: 1px solid #2b2358;
+  background: #100b26;
   padding: 2px 7px;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .chartFeedTag,
@@ -979,7 +957,7 @@ a:hover {
   border: 1px solid #4a4322;
   background: #1d1a10;
   padding: 2px 6px;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .timeframes {
@@ -992,7 +970,7 @@ a:hover {
   min-width: 34px;
   padding: 0 8px;
   border: 1px solid #1c252e;
-  border-radius: 2px;
+  border-radius: 0;
   background: #11171c;
   color: #8a949e;
   font-size: 12px;
@@ -1001,8 +979,8 @@ a:hover {
 
 .tf.active {
   color: #0b1113;
-  background: #82e2a8;
-  border-color: #82e2a8;
+  background: #836ef9;
+  border-color: #836ef9;
 }
 
 .chartWrap {
@@ -1025,13 +1003,13 @@ a:hover {
 
 .chartMark {
   font-size: 15px;
-  color: #82e2a8;
+  color: #836ef9;
 }
 
 .chartCanvas {
   width: 100%;
   border: 1px solid #161d23;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .chartLoading {
@@ -1105,7 +1083,7 @@ a:hover {
 }
 
 .bookRow.bid .bookDepth {
-  background: rgba(130, 226, 168, 0.1);
+  background: rgba(131, 110, 249, 0.1);
 }
 
 .bookRow span {
@@ -1173,7 +1151,7 @@ a:hover {
 .sideBtn {
   height: 40px;
   border: 1px solid #1c252e;
-  border-radius: 2px;
+  border-radius: 0;
   background: #11171c;
   color: #8a949e;
   font-weight: 800;
@@ -1181,8 +1159,8 @@ a:hover {
 
 .sideBtn.long.active {
   color: #0b1113;
-  background: #82e2a8;
-  border-color: #82e2a8;
+  background: #836ef9;
+  border-color: #836ef9;
 }
 
 .sideBtn.short.active {
@@ -1220,13 +1198,13 @@ a:hover {
   font-size: 10px;
   font-weight: 800;
   padding: 2px 7px;
-  border-radius: 2px;
+  border-radius: 0;
   letter-spacing: 0.03em;
 }
 
 .pill.pos {
   color: #0b1113;
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .pill.muted {
@@ -1238,9 +1216,11 @@ a:hover {
   width: 100%;
 }
 
-/* Dense bottom panels */
+/* Dense bottom panels — flush (no own border) so they connect via the
+   grid's 1px hairline gaps into one continuous surface. */
 .densePanel {
   padding: 0;
+  border: 0;
 }
 
 .densePanelHead {
@@ -1307,7 +1287,7 @@ a:hover {
   gap: 16px;
   flex-wrap: wrap;
   border: 1px solid #1c252e;
-  border-radius: 4px;
+  border-radius: 0;
   padding: 14px 16px;
   margin-bottom: 14px;
   background: #0d1116;
@@ -1380,7 +1360,7 @@ a:hover {
 
 .progressTrack {
   height: 14px;
-  border-radius: 2px;
+  border-radius: 0;
   overflow: hidden;
   background: #1a2128;
   border: 1px solid #1c252e;
@@ -1394,7 +1374,7 @@ a:hover {
 }
 
 .progressFill.done {
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .ruleList {
@@ -1409,7 +1389,7 @@ a:hover {
   justify-content: space-between;
   gap: 12px;
   border: 1px solid #1c252e;
-  border-radius: 2px;
+  border-radius: 0;
   padding: 12px;
   background: #11171c;
 }
@@ -1448,15 +1428,15 @@ a:hover {
 }
 
 .stateStep.active {
-  color: #82e2a8;
+  color: #836ef9;
 }
 
 .stateStep.active .stateDot {
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .stateStep.cleared .stateDot {
-  background: #4d6b58;
+  background: #463a78;
 }
 
 .examLedgerCols {
@@ -1466,11 +1446,16 @@ a:hover {
 @media (max-width: 1200px) {
   .terminalTop {
     grid-template-columns: 1fr 1fr;
+    height: auto;
   }
 
   .terminalChart {
     grid-column: 1 / -1;
     order: -1;
+  }
+
+  .terminalCell {
+    min-height: 280px;
   }
 
   .terminalBottom {
@@ -1488,7 +1473,7 @@ a:hover {
   display: grid;
   gap: 6px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 12px;
   background: #0d1116;
 }
@@ -1517,15 +1502,15 @@ a:hover {
   min-height: 88px;
   text-align: left;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 12px;
   color: #dce3df;
   background: #0d1116;
 }
 
 .marketPill.active {
-  border-color: #82e2a8;
-  background: #17231d;
+  border-color: #836ef9;
+  background: #15103a;
 }
 
 .marketPill span,
@@ -1561,7 +1546,7 @@ a:hover {
 .panel {
   min-width: 0;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 16px;
   background: #0d1116;
 }
@@ -1598,7 +1583,7 @@ a:hover {
 .metric {
   min-height: 82px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 12px;
   color: #f5f7fa;
   background: #11171c;
@@ -1611,7 +1596,7 @@ a:hover {
 }
 
 .tier.active {
-  border-color: #82e2a8;
+  border-color: #836ef9;
 }
 
 .metric {
@@ -1637,7 +1622,7 @@ a:hover {
   width: 100%;
   height: 42px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 0 12px;
   color: #f5f7fa;
   background: #080a0d;
@@ -1668,7 +1653,7 @@ a:hover {
 
 .meterTrack {
   height: 14px;
-  border-radius: 2px;
+  border-radius: 0;
   overflow: hidden;
   background: #1a2128;
 }
@@ -1681,7 +1666,7 @@ a:hover {
 }
 
 .meter.safe .meterTrack div {
-  background: #82e2a8;
+  background: #836ef9;
 }
 
 .meter.warning .meterTrack div {
@@ -1707,7 +1692,7 @@ a:hover {
   justify-content: space-between;
   gap: 12px;
   border: 1px solid #1c252e;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 12px;
   background: #11171c;
 }

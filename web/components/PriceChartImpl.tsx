@@ -59,9 +59,9 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
 
     const precision = Math.max(0, Math.min(8, decimals));
     const areaSeries = chart.addSeries(AreaSeries, {
-      lineColor: "#82e2a8",
-      topColor: "rgba(130, 226, 168, 0.28)",
-      bottomColor: "rgba(130, 226, 168, 0.0)",
+      lineColor: "#836ef9",
+      topColor: "rgba(131, 110, 249, 0.30)",
+      bottomColor: "rgba(131, 110, 249, 0.0)",
       lineWidth: 2,
       priceLineVisible: true,
       lastValueVisible: true,
@@ -134,7 +134,7 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
 
     bidLineRef.current = s.createPriceLine({
       price: mark * (1 - mmSpread),
-      color: "#82e2a8",
+      color: "#836ef9",
       lineWidth: 1,
       lineStyle: LineStyle.Dashed,
       axisLabelVisible: true,
@@ -155,7 +155,7 @@ export default function PriceChartImpl({series, symbol, height = 320, decimals =
       const marker: SeriesMarker<Time> = {
         time: Math.floor(markTime) as UTCTimestamp,
         position: isAsk ? "aboveBar" : "belowBar",
-        color: isAsk ? "#ff6262" : "#82e2a8",
+        color: isAsk ? "#ff6262" : "#836ef9",
         shape: "circle",
         size: 0.6
       };

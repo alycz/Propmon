@@ -24,7 +24,6 @@ export function StrategyCard({strategy, onAccept, onDecline, decided}: Props) {
           </div>
         ))}
       </dl>
-      <p className="strategyRisk">{strategy.risk}</p>
       <p className="strategyPrompt">{AGENT_LINES.agentPrompt}</p>
       {!decided && (
         <div className="strategyActions">

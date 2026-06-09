@@ -23,22 +23,8 @@ export function TradingSurface({surface}: {surface: SurfaceKind}) {
   const market = marketById(core.selectedMarketId);
   const [timeframe, setTimeframe] = useState<(typeof timeframes)[number]>("5m");
 
-  const isExam = surface === "examination";
-  const badgeText = isExam ? "EXAMINATION — simulated balance" : "TERMINAL — funded";
-
   return (
     <div className="surface">
-      <div className={`surfaceBadge ${isExam ? "exam" : "funded"}`}>
-        <span className="surfaceBadgeLabel">{badgeText}</span>
-        <span className="surfaceBadgeNote">
-          {isExam
-            ? "Evaluation context — PnL is simulated / scored against the examination rules."
-            : core.mode === "demo"
-              ? "Funded context — demo mode: fills are simulated, clearly labeled, not live execution."
-              : "Funded context — funded trading."}
-        </span>
-      </div>
-
       <TerminalShell
         market={<MarketStrip />}
         chart={
@@ -69,8 +55,7 @@ export function TradingSurface({surface}: {surface: SurfaceKind}) {
               marketMaking={{active: mm.active, spreadBps: mm.spreadBps, tick: mm.tick}}
             />
             <p className="chartFootnote">
-              Series is derived from on-chain spot reads (no historical price feed exists on-chain)
-              {core.mode === "demo" ? ", seeded with a deterministic demo path" : ""}.
+              Spot-read series{core.mode === "demo" ? " · seeded demo path" : ""}.
             </p>
           </div>
         }
