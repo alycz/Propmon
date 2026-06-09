@@ -279,6 +279,466 @@ a:hover {
   color: #8a949e;
 }
 
+/* ---------- Terminal (exchange) layout ---------- */
+.terminal {
+  display: grid;
+  gap: 12px;
+}
+
+.terminalTop {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr) 248px 300px;
+  gap: 1px;
+  border: 1px solid #1c252e;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #1c252e;
+}
+
+.terminalCell {
+  min-width: 0;
+  background: #0d1116;
+}
+
+.terminalBottom {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 12px;
+}
+
+/* Market list */
+.marketList {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.marketListHead,
+.bookHead,
+.densePanelHead .eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a949e;
+}
+
+.marketListHead {
+  padding: 10px 12px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.marketRow {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 1px solid #141b21;
+  background: transparent;
+  color: #c7d0d6;
+}
+
+.marketRow:hover {
+  background: #11171c;
+}
+
+.marketRow.active {
+  background: #11201a;
+  box-shadow: inset 2px 0 0 #82e2a8;
+}
+
+.marketRowSym {
+  font-weight: 800;
+  color: #f5f7fa;
+}
+
+.marketRowPrice {
+  font-size: 13px;
+  color: #e4ebef;
+}
+
+.marketRowMeta {
+  font-size: 10px;
+  color: #8a949e;
+}
+
+/* Chart */
+.chartPanel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px 12px;
+}
+
+.chartControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.chartTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chartTitle strong {
+  font-size: 18px;
+  color: #f5f7fa;
+}
+
+.chartFeedTag,
+.bookTag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #ffd166;
+  border: 1px solid #4a4322;
+  background: #1d1a10;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.timeframes {
+  display: flex;
+  gap: 4px;
+}
+
+.tf {
+  height: 26px;
+  min-width: 34px;
+  padding: 0 8px;
+  border: 1px solid #1c252e;
+  border-radius: 2px;
+  background: #11171c;
+  color: #8a949e;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tf.active {
+  color: #0b1113;
+  background: #82e2a8;
+  border-color: #82e2a8;
+}
+
+.chartWrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.chartSymbol {
+  font-size: 13px;
+  color: #8a949e;
+}
+
+.chartMark {
+  font-size: 15px;
+  color: #82e2a8;
+}
+
+.chartCanvas {
+  width: 100%;
+  border: 1px solid #161d23;
+  border-radius: 2px;
+}
+
+.chartLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8a949e;
+  height: 360px;
+}
+
+.chartFootnote {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: #8a949e;
+}
+
+/* Order book */
+.book {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 12px;
+}
+
+.bookHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.bookCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 6px 12px;
+  color: #8a949e;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.bookSide {
+  display: flex;
+  flex-direction: column;
+}
+
+.bookSide.asks {
+  justify-content: flex-end;
+}
+
+.bookRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 2px 12px;
+  overflow: hidden;
+}
+
+.bookDepth {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  z-index: 0;
+}
+
+.bookRow.ask .bookDepth {
+  background: rgba(255, 98, 98, 0.1);
+}
+
+.bookRow.bid .bookDepth {
+  background: rgba(130, 226, 168, 0.1);
+}
+
+.bookRow span {
+  position: relative;
+  z-index: 1;
+}
+
+.bookSize,
+.bookTotal {
+  text-align: right;
+  color: #c7d0d6;
+}
+
+.bookMid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 12px;
+  border-top: 1px solid #1c252e;
+  border-bottom: 1px solid #1c252e;
+  font-size: 14px;
+  font-weight: 800;
+  color: #f5f7fa;
+}
+
+.bookSpread {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8a949e;
+}
+
+/* Trade ticket */
+.ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  height: 100%;
+}
+
+.ticketHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.ticketMarket {
+  font-size: 16px;
+  font-weight: 800;
+  color: #f5f7fa;
+}
+
+.ticketMark {
+  font-size: 14px;
+  color: #8fd7ff;
+}
+
+.sideToggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.sideBtn {
+  height: 40px;
+  border: 1px solid #1c252e;
+  border-radius: 2px;
+  background: #11171c;
+  color: #8a949e;
+  font-weight: 800;
+}
+
+.sideBtn.long.active {
+  color: #0b1113;
+  background: #82e2a8;
+  border-color: #82e2a8;
+}
+
+.sideBtn.short.active {
+  color: #1a0b0b;
+  background: #ff6262;
+  border-color: #ff6262;
+}
+
+.ticket .field {
+  margin: 0;
+}
+
+.ticketNote {
+  margin: 0;
+  font-size: 11px;
+  color: #8a949e;
+  line-height: 1.4;
+}
+
+.ticketDivider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid #1c252e;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a949e;
+}
+
+.pill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 2px;
+  letter-spacing: 0.03em;
+}
+
+.pill.pos {
+  color: #0b1113;
+  background: #82e2a8;
+}
+
+.pill.muted {
+  color: #8a949e;
+  border: 1px solid #1c252e;
+}
+
+.secondary.full {
+  width: 100%;
+}
+
+/* Dense bottom panels */
+.densePanel {
+  padding: 0;
+}
+
+.densePanelHead {
+  padding: 12px 14px;
+  border-bottom: 1px solid #1c252e;
+}
+
+.densePanelHead h2 {
+  margin: 2px 0 0;
+  font-size: 16px;
+}
+
+.densePanel .metricRow,
+.densePanel .buttonRow {
+  margin: 12px 14px;
+}
+
+.densePanel .timeline {
+  margin: 12px 14px;
+}
+
+.ledgerTable {
+  display: flex;
+  flex-direction: column;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.ledgerHead,
+.ledgerLine {
+  display: grid;
+  grid-template-columns: 0.8fr 1fr 1fr 1fr 0.7fr;
+  gap: 8px;
+  padding: 8px 14px;
+  align-items: center;
+}
+
+.ledgerHead {
+  position: sticky;
+  top: 0;
+  background: #0e141a;
+  color: #8a949e;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #1c252e;
+}
+
+.ledgerLine {
+  border-bottom: 1px solid #141b21;
+  font-size: 12px;
+}
+
+.ledgerTable .helper {
+  padding: 12px 14px;
+  margin: 0;
+}
+
+@media (max-width: 1200px) {
+  .terminalTop {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .terminalChart {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .terminalBottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .terminalTop {
+    grid-template-columns: 1fr;
+  }
+}
+
 .agentSignerBox {
   display: grid;
   gap: 6px;
