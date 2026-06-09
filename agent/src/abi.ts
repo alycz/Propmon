@@ -11,6 +11,7 @@ export const examinationVaultAbi = parseAbi([
   "function recordEntry(uint256 accountId, uint256 marketId, uint8 side, int256 sizeDelta, uint256 collateral) returns (uint256 markPrice)",
   "function resolve(uint256 accountId) returns (bool passed, bool failed)",
   "function buyExamination(uint256 accountSize) payable returns (uint256 accountId)",
+"event ExaminationPurchased(uint256 indexed accountId, address indexed owner, uint256 accountSize, uint256 fee)",
   "function getRuleStatus(uint256 accountId) view returns (bool passed, bool failed)"
 ]);
 

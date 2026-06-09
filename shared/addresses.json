@@ -26,10 +26,10 @@
     }
   },
   "propmon": {
-    "examinationVault": null,
-    "fundedVault": null,
-    "accountRegistry": null,
-    "ruleEngine": null,
-    "perplPriceAdapter": null
+    "examinationVault": "0xFE1f7deFa49345cD6f6C5DdBC11BdD1A27e7C416",
+    "fundedVault": "0xdbC6638A97829c49bcA31DccE697f5Ad89B52b80",
+    "accountRegistry": "0x6E8BeeB66B9824b088913c1947C320E2092480f6",
+    "ruleEngine": "0x22527dB6f913FbAc2C801Dfa5a414FA83a198Ba9",
+    "perplPriceAdapter": "0xBeBbc43D1c29F08625B6d5E42393C303c2108AA9"
   }
 }
