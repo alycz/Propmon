@@ -2,6 +2,7 @@ import {createServer, type IncomingMessage, type ServerResponse} from "node:http
 
 import {loadAgentConfig} from "./config.js";
 import {runDemoScript} from "./demo-runner.js";
+import {createAgentSigner} from "./signer.js";
 
 const DEFAULT_PORT = 8787;
 
@@ -25,6 +26,13 @@ async function main(): Promise<void> {
 async function route(request: IncomingMessage, response: ServerResponse): Promise<void> {
   if (request.method === "GET" && request.url === "/health") {
     sendJson(response, 200, {ok: true});
+    return;
+  }
+
+  if (request.method === "GET" && request.url === "/agent-signer") {
+    const config = loadAgentConfig({...process.env, AGENT_ACCOUNT_ID: process.env.AGENT_ACCOUNT_ID || "0"});
+    const signer = createAgentSigner(config);
+    sendJson(response, 200, {ok: true, mode: signer.mode, address: await signer.getAddress()});
     return;
   }
 

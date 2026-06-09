@@ -3,7 +3,7 @@ import {resolve} from "node:path";
 
 import {isAddress, type Address, type Hex} from "viem";
 
-import type {AgentConfig, DemoConfig, DeploymentAddresses, MarketConfig, PropmonMode} from "./types.js";
+import type {AgentConfig, AgentSignerMode, DemoConfig, DeploymentAddresses, MarketConfig, PropmonMode} from "./types.js";
 
 type AddressBookJson = {
   chainId?: number;
@@ -28,6 +28,11 @@ export function resolveAgentMode(input?: string): PropmonMode {
   return input === "live" ? "live" : "demo";
 }
 
+export function resolveAgentSignerMode(input: string | undefined, env: NodeJS.ProcessEnv = process.env): AgentSignerMode {
+  if (input === "privy-server-wallet" || input === "private-key") return input;
+  return env.AGENT_PRIVATE_KEY ? "private-key" : "privy-server-wallet";
+}
+
 export function loadAgentConfig(env: NodeJS.ProcessEnv = process.env): AgentConfig {
   const addressBookPath = resolveRepoPath(env.ADDRESS_BOOK_PATH ?? "shared/addresses.json");
   const deploymentsPath = resolveRepoPath(env.DEPLOYMENTS_PATH ?? "shared/deployments.json");
@@ -46,6 +51,7 @@ export function loadAgentConfig(env: NodeJS.ProcessEnv = process.env): AgentConf
 
   return {
     mode: resolveAgentMode(env.PROPMON_MODE),
+    agentSignerMode: resolveAgentSignerMode(env.AGENT_SIGNER_MODE, env),
     rpcUrl: env.MONAD_RPC_URL ?? addressBook.rpcUrl ?? "https://testnet-rpc.monad.xyz",
     chainId: integerFromEnv(env.PERPL_CHAIN_ID, addressBook.chainId ?? 10143, "PERPL_CHAIN_ID"),
     perplApiUrl: env.PERPL_API_URL ?? addressBook.perpl?.restUrl ?? "https://testnet.perpl.xyz/api",
@@ -54,7 +60,11 @@ export function loadAgentConfig(env: NodeJS.ProcessEnv = process.env): AgentConf
     deployments: loadDeployments(env, deploymentsJson, addressBook, deploymentsPath),
     markets,
     demoConfig,
-    agentPrivateKey: requiredPrivateKey(env.AGENT_PRIVATE_KEY, "AGENT_PRIVATE_KEY"),
+    agentPrivateKey: optionalPrivateKey(env.AGENT_PRIVATE_KEY, "AGENT_PRIVATE_KEY"),
+    privyAppId: optionalString(env.PRIVY_APP_ID),
+    privyAppSecret: optionalString(env.PRIVY_APP_SECRET),
+    privyServerWalletId: optionalString(env.PRIVY_SERVER_WALLET_ID),
+    privyAuthorizationPrivateKey: optionalString(env.PRIVY_AUTHORIZATION_PRIVATE_KEY),
     reconcilerPrivateKey: optionalPrivateKey(env.RECONCILER_PRIVATE_KEY, "RECONCILER_PRIVATE_KEY"),
     accountId: bigintFromEnv(env.AGENT_ACCOUNT_ID, "AGENT_ACCOUNT_ID"),
     marketSymbol,
@@ -158,18 +168,16 @@ function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(path, "utf8")) as T;
 }
 
-function requiredPrivateKey(value: string | undefined, name: string): Hex {
-  const privateKey = optionalPrivateKey(value, name);
-  if (!privateKey) throw new Error(`${name} must be set to a 0x-prefixed private key`);
-  return privateKey;
-}
-
 function optionalPrivateKey(value: string | undefined, name: string): Hex | undefined {
   if (value === undefined || value === "") return undefined;
   if (!/^0x[0-9a-fA-F]{64}$/.test(value)) {
     throw new Error(`${name} must be a 0x-prefixed private key`);
   }
   return value as Hex;
+}
+
+function optionalString(value: string | undefined): string | undefined {
+  return value && value.trim() ? value.trim() : undefined;
 }
 
 function integerFromEnv(value: string | undefined, defaultValue: number, name: string): number {

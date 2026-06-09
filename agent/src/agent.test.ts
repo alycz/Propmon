@@ -6,14 +6,15 @@ import test from "node:test";
 
 import type {Hex} from "viem";
 
-import {loadAgentConfig, resolveAgentMode} from "./config.js";
+import {loadAgentConfig, resolveAgentMode, resolveAgentSignerMode} from "./config.js";
 import {connectPerpl, PerplWhitelistError} from "./perpl-auth.js";
 import {buildAuthSignInMessage, buildOrderRequestMessage, PerplOrderAction} from "./perpl-ws.js";
 import {orderActionFromVaultIntent} from "./chain.js";
 import {handleFillMessage} from "./live.js";
 import {nextRq, seedRqFromLfr} from "./rq.js";
+import {buildPrivyTransactionInput, createAgentSigner} from "./signer.js";
 import {decideNextTrade, fundedExecutionRoute, selectVaultPath} from "./strategy.js";
-import {AccountState, type DemoConfig, type MarketConfig, VaultSide} from "./types.js";
+import {AccountState, type AgentConfig, type DemoConfig, type MarketConfig, VaultSide} from "./types.js";
 
 const privateKey = `0x${"1".repeat(64)}` as Hex;
 const address = "0x0000000000000000000000000000000000000001";
@@ -36,10 +37,47 @@ const demoConfig: DemoConfig = {
   }
 };
 
+function mockAgentConfig(overrides: Partial<AgentConfig> = {}): AgentConfig {
+  return {
+    mode: "demo",
+    agentSignerMode: "private-key",
+    rpcUrl: "https://rpc.example",
+    chainId: 10143,
+    perplApiUrl: "https://perpl.example/api",
+    perplWsUrl: "wss://perpl.example",
+    tradingWsPath: "/ws/v1/trading",
+    deployments: {
+      accountRegistry: address,
+      examinationVault: address,
+      fundedVault: address,
+      perplPriceAdapter: address
+    },
+    markets,
+    demoConfig,
+    agentPrivateKey: privateKey,
+    accountId: 7n,
+    marketSymbol: "MON",
+    marketId: 64n,
+    pollIntervalMs: 10_000,
+    statePath: ".context/test-agent-rq-state.json",
+    perplLfrSeed: 0n,
+    perplLeverageHundredths: 1_000,
+    perplRefCode: 0n,
+    ...overrides
+  };
+}
+
 test("resolveAgentMode defaults to demo", () => {
   assert.equal(resolveAgentMode(undefined), "demo");
   assert.equal(resolveAgentMode("invalid"), "demo");
   assert.equal(resolveAgentMode("live"), "live");
+});
+
+test("resolveAgentSignerMode defaults to private key only when fallback key is present", () => {
+  assert.equal(resolveAgentSignerMode(undefined, {}), "privy-server-wallet");
+  assert.equal(resolveAgentSignerMode(undefined, {AGENT_PRIVATE_KEY: privateKey}), "private-key");
+  assert.equal(resolveAgentSignerMode("private-key", {}), "private-key");
+  assert.equal(resolveAgentSignerMode("privy-server-wallet", {AGENT_PRIVATE_KEY: privateKey}), "privy-server-wallet");
 });
 
 test("loadAgentConfig reads shared files and env overrides", () => {
@@ -78,12 +116,92 @@ test("loadAgentConfig reads shared files and env overrides", () => {
     });
 
     assert.equal(config.mode, "demo");
+    assert.equal(config.agentSignerMode, "private-key");
     assert.equal(config.accountId, 7n);
     assert.equal(config.marketId, 64n);
     assert.equal(config.deployments.fundedVault, address);
   } finally {
     rmSync(dir, {recursive: true, force: true});
   }
+});
+
+test("Privy signer builds Monad transaction payloads with authorization context", () => {
+  const config = mockAgentConfig({
+    agentSignerMode: "privy-server-wallet",
+    privyAuthorizationPrivateKey: "authorization-key"
+  });
+  const payload = buildPrivyTransactionInput(config, {
+    to: config.deployments.examinationVault,
+    data: "0x1234",
+    value: 5n
+  });
+
+  assert.equal(payload.caip2, "eip155:10143");
+  assert.deepEqual(payload.authorization_context, {authorization_private_keys: ["authorization-key"]});
+  assert.deepEqual(payload.params.transaction, {
+    to: config.deployments.examinationVault,
+    data: "0x1234",
+    chain_id: 10143,
+    value: "0x5"
+  });
+});
+
+test("private-key signer exposes address and message signatures for fallback mode", async () => {
+  const signer = createAgentSigner(mockAgentConfig({agentSignerMode: "private-key", agentPrivateKey: privateKey}));
+  assert.equal((await signer.getAddress()).toLowerCase(), "0x19e7e376e7c213b7e7e7e46cc70a5dd086daff2a");
+  assert.match(await signer.signMessage("hello"), /^0x[0-9a-f]+$/i);
+});
+
+test("Privy signer signs Perpl SIWE messages through the server wallet", async () => {
+  const calls: string[] = [];
+  const config = mockAgentConfig({
+    agentSignerMode: "privy-server-wallet",
+    privyAppId: "app",
+    privyAppSecret: "secret",
+    privyServerWalletId: "wallet-1",
+    privyAuthorizationPrivateKey: "authorization-key"
+  });
+  const signer = createAgentSigner(config, {
+    wallets: () => ({
+      get: async () => ({address}),
+      ethereum: () => ({
+        sendTransaction: async () => ({hash: `0x${"b".repeat(64)}`}),
+        signMessage: async (_walletId, input) => {
+          calls.push(input.message);
+          return {signature: `0x${"a".repeat(130)}`};
+        }
+      })
+    })
+  });
+
+  const fetcher: typeof fetch = async (url, init) => {
+    if (url.toString().endsWith("/v1/auth/payload")) {
+      return new Response(JSON.stringify({message: "Sign in to Perpl"}), {
+        status: 200,
+        headers: {"set-cookie": "payload=abc; Path=/"}
+      });
+    }
+    assert.deepEqual(JSON.parse(init?.body?.toString() ?? "{}"), {
+      address,
+      message: "Sign in to Perpl",
+      signature: `0x${"a".repeat(130)}`
+    });
+    return new Response(JSON.stringify({nonce: "nonce-1"}), {
+      status: 200,
+      headers: {"set-cookie": "auth=def; Path=/"}
+    });
+  };
+
+  const session = await connectPerpl({
+    apiUrl: "https://perpl.example/api",
+    address: await signer.getAddress(),
+    chainId: config.chainId,
+    signMessage: (message) => signer.signMessage(message),
+    fetchImpl: fetcher
+  });
+
+  assert.equal(session.signature, `0x${"a".repeat(130)}`);
+  assert.deepEqual(calls, ["Sign in to Perpl"]);
 });
 
 test("loadAgentConfig fails fast when deployments are missing", () => {

@@ -20,10 +20,25 @@ PROPMON_MODE=live pnpm agent:dev
 Required for all runs:
 
 ```bash
-AGENT_PRIVATE_KEY=0x...
+AGENT_SIGNER_MODE=privy-server-wallet # or private-key for local fallback
 AGENT_ACCOUNT_ID=1
 PROPMON_MODE=demo # or live
 MONAD_RPC_URL=https://testnet-rpc.monad.xyz
+```
+
+Privy server-wallet mode also requires:
+
+```bash
+PRIVY_APP_ID=...
+PRIVY_APP_SECRET=...
+PRIVY_SERVER_WALLET_ID=...
+PRIVY_AUTHORIZATION_PRIVATE_KEY=...
+```
+
+Private-key fallback mode requires:
+
+```bash
+AGENT_PRIVATE_KEY=0x...
 ```
 
 Contract addresses are read from `shared/deployments.json` first, with env overrides:
@@ -48,7 +63,7 @@ PERPL_TRADING_WS_PATH=/ws/v1/trading
 
 ## Behavior
 
-The agent key has no special contract privileges. It must already be authorized through `AccountRegistry.authorizeSigner(accountId, agentAddress)`.
+The agent signer has no special contract privileges. It must already be authorized through `AccountRegistry.authorizeSigner(accountId, agentAddress)`. In the primary Agent 09 path, `agentAddress` is the Privy server-wallet address returned by `GET /agent-signer`.
 
 Routing:
 
@@ -64,7 +79,7 @@ Demo mode uses `shared/demo-config.json.scriptedPass.entries` in step order. Tho
 SIWE flow:
 
 1. `POST /v1/auth/payload` with wallet address and chain id.
-2. Sign the returned SIWE message with `AGENT_PRIVATE_KEY`.
+2. Sign the returned SIWE message with the configured `AgentSigner` (`privy-server-wallet` primary, `private-key` fallback).
 3. `POST /v1/auth/connect` with address, message, and signature.
 4. Use the returned auth cookie and nonce to open `wss://testnet.perpl.xyz/ws/v1/trading`.
 5. Send `AuthSignIn` (`mt:4`) and submit `OrderRequest` (`mt:22`) messages.

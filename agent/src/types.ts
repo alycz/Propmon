@@ -1,6 +1,7 @@
 import type {Address, Hex} from "viem";
 
 export type PropmonMode = "live" | "demo";
+export type AgentSignerMode = "privy-server-wallet" | "private-key";
 
 export type DeploymentAddresses = {
   accountRegistry: Address;
@@ -42,6 +43,7 @@ export type DemoConfig = {
 
 export type AgentConfig = {
   mode: PropmonMode;
+  agentSignerMode: AgentSignerMode;
   rpcUrl: string;
   chainId: number;
   perplApiUrl: string;
@@ -50,7 +52,11 @@ export type AgentConfig = {
   deployments: DeploymentAddresses;
   markets: MarketConfig[];
   demoConfig: DemoConfig;
-  agentPrivateKey: Hex;
+  agentPrivateKey?: Hex;
+  privyAppId?: string;
+  privyAppSecret?: string;
+  privyServerWalletId?: string;
+  privyAuthorizationPrivateKey?: string;
   reconcilerPrivateKey?: Hex;
   accountId: bigint;
   marketSymbol: string;

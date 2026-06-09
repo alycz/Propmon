@@ -1,4 +1,4 @@
-export {loadAgentConfig, resolveAgentMode} from "./config.js";
+export {loadAgentConfig, resolveAgentMode, resolveAgentSignerMode} from "./config.js";
 export {PerplWhitelistError, connectPerpl} from "./perpl-auth.js";
 export {buildAuthSignInMessage, buildOrderRequestMessage, parseFillMessage} from "./perpl-ws.js";
 export {nextRq, seedRqFromLfr} from "./rq.js";
@@ -6,7 +6,9 @@ export {decideNextTrade, fundedExecutionRoute, selectVaultPath} from "./strategy
 export {runAgentLoop, runAgentOnce} from "./loop.js";
 export {runDemoScript} from "./demo-runner.js";
 export {handleFillMessage, startLiveIntentWatcher} from "./live.js";
-export type {AgentConfig, FundedExecutionRoute, TradeDecision, VaultPath} from "./types.js";
+export {buildPrivyTransactionInput, createAgentSigner} from "./signer.js";
+export type {AgentConfig, AgentSignerMode, FundedExecutionRoute, TradeDecision, VaultPath} from "./types.js";
+export type {AgentSigner, AgentSignerTransaction} from "./signer.js";
 
 import {loadAgentConfig} from "./config.js";
 import {runAgentLoop} from "./loop.js";

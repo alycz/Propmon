@@ -1,7 +1,8 @@
-import {type Hex} from "viem";
+import {encodeFunctionData, type Hex} from "viem";
 
 import {examinationVaultAbi} from "./abi.js";
-import {createClients, getAccountState, submitExaminationEntry, submitFundedDemo} from "./chain.js";
+import {createPublicClientForConfig, getAccountState, submitExaminationEntryWithSigner, submitFundedDemoWithSigner} from "./chain.js";
+import {createAgentSigner} from "./signer.js";
 import {decideNextTrade} from "./strategy.js";
 import {AccountState, type AgentConfig, type TradeDecision} from "./types.js";
 
@@ -26,15 +27,17 @@ export async function runDemoScript(config: AgentConfig, options: DemoRunnerOpti
     throw new Error("runDemoScript only supports PROPMON_MODE=demo");
   }
 
-  const {account, publicClient, walletClient} = createClients(config, config.agentPrivateKey);
+  const signer = createAgentSigner(config);
+  const signerAddress = await signer.getAddress();
+  const publicClient = createPublicClientForConfig(config);
   const authorized = await publicClient.readContract({
     address: config.deployments.accountRegistry,
     abi: (await import("./abi.js")).accountRegistryAbi,
     functionName: "isAuthorizedSigner",
-    args: [config.accountId, account.address]
+    args: [config.accountId, signerAddress]
   });
   if (!authorized) {
-    throw new Error(`Agent signer ${account.address} is not authorized for account ${config.accountId}`);
+    throw new Error(`Agent signer ${signerAddress} is not authorized for account ${config.accountId}`);
   }
 
   const stateBefore = await getAccountState(config);
@@ -45,7 +48,7 @@ export async function runDemoScript(config: AgentConfig, options: DemoRunnerOpti
   if (stateBefore === AccountState.EXAMINATION) {
     for (const step of scriptedDecisions(config)) {
       await options.beforeStep?.(step.demoStep);
-      const hash = await submitExaminationEntry(config, step.decision);
+      const hash = await submitExaminationEntryWithSigner(signer, config, step.decision);
       await publicClient.waitForTransactionReceipt({hash});
       examinationTxs.push(hash);
       executedDemoSteps += 1;
@@ -56,11 +59,13 @@ export async function runDemoScript(config: AgentConfig, options: DemoRunnerOpti
 
     const postEntriesState = await getAccountState(config);
     if (postEntriesState === AccountState.EXAMINATION) {
-      const hash = await walletClient.writeContract({
-        address: config.deployments.examinationVault,
-        abi: examinationVaultAbi,
-        functionName: "resolve",
-        args: [config.accountId]
+      const hash = await signer.sendTransaction({
+        to: config.deployments.examinationVault,
+        data: encodeFunctionData({
+          abi: examinationVaultAbi,
+          functionName: "resolve",
+          args: [config.accountId]
+        })
       });
       await publicClient.waitForTransactionReceipt({hash});
       examinationTxs.push(hash);
@@ -71,7 +76,7 @@ export async function runDemoScript(config: AgentConfig, options: DemoRunnerOpti
   if (stateAfterExam === AccountState.FUNDED) {
     const decision = firstFundedDecision(config);
     if (decision) {
-      const openHash = await submitFundedDemo(config, decision);
+      const openHash = await submitFundedDemoWithSigner(signer, config, decision);
       await publicClient.waitForTransactionReceipt({hash: openHash});
       fundedTxs.push(openHash);
     }
@@ -82,7 +87,7 @@ export async function runDemoScript(config: AgentConfig, options: DemoRunnerOpti
     ok: stateAfter === AccountState.PASSED || stateAfter === AccountState.FUNDED || stateAfter === AccountState.PAYOUT,
     mode: "demo",
     accountId: config.accountId.toString(),
-    signer: account.address,
+    signer: signerAddress,
     stateBefore: AccountState[stateBefore],
     stateAfter: AccountState[stateAfter],
     examinationTxs,
