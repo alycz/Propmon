@@ -8,6 +8,7 @@ import {http} from "wagmi";
 
 import {monadTestnet} from "../lib/config";
 import {PropmonProvider} from "../components/PropmonProvider";
+import {AgentDemoProvider} from "../components/AgentDemoProvider";
 
 const buildSafePrivyAppId = "clpropmonmissingappid0000";
 
@@ -43,7 +44,9 @@ export function Providers({children}: {children: ReactNode}) {
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={wagmiConfig}>
           <Suspense fallback={null}>
-            <PropmonProvider>{children}</PropmonProvider>
+            <PropmonProvider>
+              <AgentDemoProvider>{children}</AgentDemoProvider>
+            </PropmonProvider>
           </Suspense>
         </WagmiProvider>
       </QueryClientProvider>
