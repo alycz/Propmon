@@ -69,6 +69,18 @@ contract MockRuleEngine is IRuleEngine {
     string public checkReason = "";
     bool public passed;
     bool public failed;
+    uint256 public configuredAccountId;
+    uint256 public configuredTierId;
+    address public configuredAccountView;
+    bool public enforceExpectedInput;
+    uint256 public expectedAccountId;
+    uint256 public expectedMarketId;
+    int256 public expectedSizeDelta;
+    uint256 public expectedCollateral;
+    uint256 public expectedMarkPrice;
+    uint8 public expectedPriceDecimals;
+    uint8 public expectedSizeDecimals;
+    bool public expectedOpensNewPosition;
 
     function setCheck(bool ok, string memory reason) external {
         checkOk = ok;
@@ -78,6 +90,74 @@ contract MockRuleEngine is IRuleEngine {
     function setResolution(bool passed_, bool failed_) external {
         passed = passed_;
         failed = failed_;
+    }
+
+    function setExpectedDetailedInput(
+        uint256 accountId,
+        uint256 marketId,
+        int256 sizeDelta,
+        uint256 collateral,
+        uint256 markPrice,
+        uint8 priceDecimals,
+        uint8 sizeDecimals,
+        bool opensNewPosition
+    ) external {
+        enforceExpectedInput = true;
+        expectedAccountId = accountId;
+        expectedMarketId = marketId;
+        expectedSizeDelta = sizeDelta;
+        expectedCollateral = collateral;
+        expectedMarkPrice = markPrice;
+        expectedPriceDecimals = priceDecimals;
+        expectedSizeDecimals = sizeDecimals;
+        expectedOpensNewPosition = opensNewPosition;
+    }
+
+    function configureAccount(uint256 accountId, uint256 tierId, address accountView) external {
+        configuredAccountId = accountId;
+        configuredTierId = tierId;
+        configuredAccountView = accountView;
+    }
+
+    function setRuleSet(uint256, RuleSet calldata) external {}
+
+    function getRuleSetForTier(uint256) external pure returns (RuleSet memory) {
+        return RuleSet({
+            profitTargetBps: 0,
+            maxDailyDrawdownBps: 0,
+            maxTotalDrawdownBps: 0,
+            maxLeverageX: 0,
+            maxNotional: 0,
+            maxOpenPositions: 0
+        });
+    }
+
+    function getRuleSetForAccount(uint256) external pure returns (RuleSet memory) {
+        return RuleSet({
+            profitTargetBps: 0,
+            maxDailyDrawdownBps: 0,
+            maxTotalDrawdownBps: 0,
+            maxLeverageX: 0,
+            maxNotional: 0,
+            maxOpenPositions: 0
+        });
+    }
+
+    function checkTradeDetailed(TradeCheckInput calldata input) external view returns (bool ok, string memory reason) {
+        if (
+            enforceExpectedInput
+                && (input.accountId != expectedAccountId
+                    || input.marketId != expectedMarketId
+                    || input.sizeDelta != expectedSizeDelta
+                    || input.collateral != expectedCollateral
+                    || input.markPrice != expectedMarkPrice
+                    || input.priceDecimals != expectedPriceDecimals
+                    || input.sizeDecimals != expectedSizeDecimals
+                    || input.opensNewPosition != expectedOpensNewPosition)
+        ) {
+            return (false, "BAD_DETAILED_INPUT");
+        }
+        return (checkOk, checkReason);
     }
 
     function checkTrade(uint256, int256, uint256, uint256) external view returns (bool ok, string memory reason) {
@@ -95,6 +175,7 @@ contract ExaminationVaultTest is Test {
     uint256 private constant MARKET_ID = 1;
     uint256 private constant MON_MARKET_ID = 64;
     uint256 private constant MAX_PRICE_AGE = 1 hours;
+    uint256 private constant DEFAULT_TIER_ID = 1;
 
     address private admin = address(0xA11CE);
     address private trader = address(0xB0B);
@@ -119,7 +200,7 @@ contract ExaminationVaultTest is Test {
         registry = new MockAccountRegistry();
         priceAdapter = new MockPriceAdapter();
         ruleEngine = new MockRuleEngine();
-        vault = new ExaminationVault(registry, priceAdapter, ruleEngine, MAX_PRICE_AGE, admin);
+        vault = new ExaminationVault(registry, priceAdapter, ruleEngine, MAX_PRICE_AGE, DEFAULT_TIER_ID, admin);
 
         vm.prank(admin);
         vault.setMarketSizeDecimals(MARKET_ID, 0);
@@ -143,6 +224,9 @@ contract ExaminationVaultTest is Test {
         assertEq(accountId, 1);
         assertEq(address(vault).balance, FEE);
         assertEq(uint256(registry.states(accountId)), uint256(IAccountRegistry.AccountState.EXAMINATION));
+        assertEq(ruleEngine.configuredAccountId(), accountId);
+        assertEq(ruleEngine.configuredTierId(), DEFAULT_TIER_ID);
+        assertEq(ruleEngine.configuredAccountView(), address(vault));
 
         ExaminationVault.AccountViewData memory account = vault.getAccount(accountId);
         assertEq(account.owner, trader);
@@ -199,6 +283,14 @@ contract ExaminationVaultTest is Test {
 
         vm.prank(trader);
         vm.expectRevert(bytes("MAX_NOTIONAL"));
+        vault.recordEntry(accountId, MARKET_ID, IExaminationVault.Side.LONG, 10, 1_000_000_000);
+    }
+
+    function testRecordEntryUsesDetailedRuleCheck() external {
+        uint256 accountId = _buy();
+        ruleEngine.setExpectedDetailedInput(accountId, MARKET_ID, 10, 1_000_000_000, 10_000, 2, 0, true);
+
+        vm.prank(trader);
         vault.recordEntry(accountId, MARKET_ID, IExaminationVault.Side.LONG, 10, 1_000_000_000);
     }
 
