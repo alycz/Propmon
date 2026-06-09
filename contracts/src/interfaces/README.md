@@ -8,13 +8,15 @@ These interfaces are the shared contract between all implementation agents. Trea
 Vault
   -> AccountRegistry: owner, authorized signer, current account state
   -> PerplPriceAdapter: on-chain market price
-  -> RuleEngine.checkTrade: pre-trade risk decision
+  -> RuleEngine.configureAccount: account-to-tier/view registration at creation/activation
+  -> RuleEngine.checkTradeDetailed: pre-trade risk decision
   -> Vault ledger/accounting update
   -> RuleEngine.evaluatePassFail: examination resolution
   -> AccountRegistry.setState: guarded state transition
 ```
 
 The examination vault and funded vault both implement `IAccountView` so the rule engine can evaluate current account state without owning vault storage.
+The legacy `RuleEngine.checkTrade` selector remains for compatibility; new vault code should pass full market and decimal context through `checkTradeDetailed`.
 
 ## Demo Mode Boundary
 

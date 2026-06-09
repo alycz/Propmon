@@ -22,6 +22,7 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
     IRuleEngine public immutable ruleEngine;
 
     uint256 public immutable maxPriceAge;
+    uint256 public immutable defaultRuleTierId;
     uint256 public nextAccountId = 1;
 
     struct Entry {
@@ -96,6 +97,7 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
         IPerplPriceAdapter priceAdapter_,
         IRuleEngine ruleEngine_,
         uint256 maxPriceAge_,
+        uint256 defaultRuleTierId_,
         address owner_
     ) Ownable(owner_) {
         if (
@@ -110,6 +112,7 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
         priceAdapter = priceAdapter_;
         ruleEngine = ruleEngine_;
         maxPriceAge = maxPriceAge_;
+        defaultRuleTierId = defaultRuleTierId_;
     }
 
     function buyExamination(uint256 accountSize) external payable nonReentrant returns (uint256 accountId) {
@@ -133,6 +136,7 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
         });
 
         registry.setState(accountId, IAccountRegistry.AccountState.EXAMINATION);
+        ruleEngine.configureAccount(accountId, defaultRuleTierId, address(this));
         emit ExaminationPurchased(accountId, msg.sender, accountSize, msg.value);
     }
 
@@ -149,8 +153,7 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
         (markPrice, priceDecimals,) = _freshPrice(marketId);
         uint256 markPriceX18 = _normalizePrice(markPrice, priceDecimals);
 
-        (bool ok, string memory reason) = ruleEngine.checkTrade(accountId, sizeDelta, collateral, markPrice);
-        require(ok, reason);
+        _requireRuleCheck(accountId, marketId, sizeDelta, collateral, markPrice, priceDecimals);
 
         uint256 preTradeEquity = _computeEquity(accountId);
         _rollDayIfNeeded(account, preTradeEquity);
@@ -271,6 +274,29 @@ contract ExaminationVault is IExaminationVault, Ownable, ReentrancyGuard {
     function activeMarketIds(uint256 accountId) external view returns (uint256[] memory) {
         _account(accountId);
         return activeMarkets[accountId];
+    }
+
+    function _requireRuleCheck(
+        uint256 accountId,
+        uint256 marketId,
+        int256 sizeDelta,
+        uint256 collateral,
+        uint256 markPrice,
+        uint8 priceDecimals
+    ) private view {
+        (bool ok, string memory reason) = ruleEngine.checkTradeDetailed(
+            IRuleEngine.TradeCheckInput({
+                accountId: accountId,
+                marketId: marketId,
+                sizeDelta: sizeDelta,
+                collateral: collateral,
+                markPrice: markPrice,
+                priceDecimals: priceDecimals,
+                sizeDecimals: marketSizeDecimals[marketId],
+                opensNewPosition: positions[accountId][marketId].size == 0
+            })
+        );
+        require(ok, reason);
     }
 
     function _account(uint256 accountId) private view returns (AccountData storage account) {

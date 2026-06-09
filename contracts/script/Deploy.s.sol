@@ -4,6 +4,7 @@ pragma solidity ^0.8.28;
 import {Script} from "forge-std/Script.sol";
 import {console2} from "forge-std/console2.sol";
 import {PerplPriceAdapter} from "../src/oracle/PerplPriceAdapter.sol";
+import {RuleEngine} from "../src/rules/RuleEngine.sol";
 
 interface VmJson {
     function serializeString(string calldata objectKey, string calldata valueKey, string calldata value)
@@ -49,18 +50,29 @@ contract Deploy is Script {
         // 4. ExaminationVault
         // 5. FundedVault
         //
+        RuleEngine ruleEngine = new RuleEngine(deployer);
         PerplPriceAdapter perplPriceAdapter = new PerplPriceAdapter(deployer, relayer);
 
-        // Concrete constructors and role wiring for the remaining contracts are owned by Agents 02-05.
+        address examinationVault = _envAddressOr("EXAMINATION_VAULT_ADDRESS", address(0));
+        address fundedVault = _envAddressOr("FUNDED_VAULT_ADDRESS", address(0));
+        if (examinationVault != address(0)) {
+            ruleEngine.grantRole(ruleEngine.ACCOUNT_CONFIG_ROLE(), examinationVault);
+        }
+        if (fundedVault != address(0)) {
+            ruleEngine.grantRole(ruleEngine.ACCOUNT_CONFIG_ROLE(), fundedVault);
+        }
+
+        // Concrete constructors and remaining role wiring are owned by Agents 02, 04, and 05.
         deployments = DeploymentSet({
             accountRegistry: address(0),
-            ruleEngine: address(0),
+            ruleEngine: address(ruleEngine),
             perplPriceAdapter: address(perplPriceAdapter),
-            examinationVault: address(0),
-            fundedVault: address(0)
+            examinationVault: examinationVault,
+            fundedVault: fundedVault
         });
 
         vm.stopBroadcast();
+        console2.log("RuleEngine", address(ruleEngine));
         console2.log("PerplPriceAdapter", address(perplPriceAdapter));
         console2.log("Relayer", relayer);
         _writeDeployments(deployments);
