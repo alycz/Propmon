@@ -765,6 +765,11 @@ a:hover {
   text-decoration: none;
 }
 
+.profileLinks {
+  display: flex;
+  gap: 8px;
+}
+
 .examCta .cta:hover {
   text-decoration: none;
 }
