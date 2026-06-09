@@ -1,6 +1,6 @@
 "use client";
 
-import {formatBps, formatQuote} from "../lib/format";
+import {formatBps, formatQuote, titleCase} from "../lib/format";
 import {usePropmon} from "./PropmonProvider";
 
 export function StatusStrip() {
@@ -10,11 +10,11 @@ export function StatusStrip() {
   return (
     <section className="statusStrip" aria-label="Account status">
       <StatusCell label="Account" value={core.accountIdInput ? `#${core.accountIdInput}` : "—"} mono />
-      <StatusCell label="State" value={stateLabel} accent={stateClass(stateLabel)} />
+      <StatusCell label="State" value={titleCase(stateLabel)} accent={stateClass(stateLabel)} />
       <StatusCell label="Equity" value={formatQuote(exam?.equity, true)} mono />
       <StatusCell label="Total DD" value={formatBps(drawdown?.[1])} mono />
-      <StatusCell label="Rule" value={ruleResult} accent={ruleResult === "FAILED" ? "neg" : ruleResult === "PASSED" ? "pos" : undefined} />
-      <StatusCell label="Mode" value={core.mode.toUpperCase()} accent={core.mode === "demo" ? "warn" : "pos"} />
+      <StatusCell label="Rule" value={titleCase(ruleResult)} accent={ruleResult === "FAILED" ? "neg" : ruleResult === "PASSED" ? "pos" : undefined} />
+      <StatusCell label="Mode" value={(core.mode.charAt(0).toUpperCase() + core.mode.slice(1))} accent={core.mode === "demo" ? "warn" : "pos"} />
     </section>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import {titleCase} from "../lib/format";
 import {useAgentDemo, type AccountStateLabel} from "./AgentDemoProvider";
 import {usePropmon} from "./PropmonProvider";
 
@@ -13,7 +14,7 @@ export function DemoControls() {
 
   return (
     <div className="demoControls">
-      <span className="demoControlsTag">DEMO</span>
+      <span className="demoControlsTag">Demo</span>
       <span className="demoControlsLabel">Simulate state</span>
       <div className="demoControlsBtns">
         {steps.map((label) => (
@@ -22,7 +23,7 @@ export function DemoControls() {
             className={effectiveStateLabel === label ? "demoStep active" : "demoStep"}
             onClick={() => simulateState(label)}
           >
-            {label}
+            {titleCase(label)}
           </button>
         ))}
         {isSimulated && (

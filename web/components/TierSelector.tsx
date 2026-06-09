@@ -4,13 +4,14 @@ import {useState} from "react";
 
 import {examinationVaultAbi} from "../lib/abi";
 import {tierOptions} from "../lib/config";
-import {formatNative, shortHash, txUrl} from "../lib/format";
+import {formatQuote, shortHash, txUrl} from "../lib/format";
 import {Panel} from "./ui";
 import {usePropmon} from "./PropmonProvider";
 
 export function TierSelector() {
   const {core, actions} = usePropmon();
-  const {ready, isConnected, onWrongChain, examinationAddress, accountIdInput, setAccountIdInput} = core;
+  const {ready, isConnected, onWrongChain, examinationAddress, accountIdInput, setAccountIdInput, mode} = core;
+  const isDemo = mode === "demo";
   const {writeContractAsync, submit, writePending, receiptPending, lastHash, lastAction, actionError} = actions;
 
   const [selectedTier, setSelectedTier] = useState(0);
@@ -23,8 +24,8 @@ export function TierSelector() {
       <div className="tierGrid">
         {tierOptions.map((tier, index) => (
           <button key={tier.label} className={selectedTier === index ? "tier active" : "tier"} onClick={() => setSelectedTier(index)}>
-            <span>{tier.label}</span>
-            <strong className="mono">fee {formatNative((tier.accountSize * 100n) / 10_000n)}</strong>
+            <span>{tier.label.split(" — ")[0]}</span>
+            <strong className="mono">{formatQuote(tier.examFee, true)}</strong>
           </button>
         ))}
       </div>
@@ -43,13 +44,18 @@ export function TierSelector() {
           )
         }
       >
-        Buy Examination — {selectedTierData.label}
+        Buy Examination — {formatQuote(selectedTierData.examFee, true)}
       </button>
-      <p className="helper">Entry fee is 1% of the paper balance: {formatNative(expectedFee)}. The account ID is auto-filled from the purchase receipt.</p>
-      <label className="field">
-        <span>Account ID</span>
-        <input inputMode="numeric" value={accountIdInput} onChange={(event) => setAccountIdInput(event.target.value.replace(/\D/g, ""))} placeholder="Auto-filled after buy or enter manually" />
-      </label>
+      <p className="helper">
+        Examination price: {formatQuote(selectedTierData.examFee, true)} for a {selectedTierData.label.split(" — ")[1]} paper account.
+        {isDemo ? " Demo mode — buy any tier and start trading instantly." : " The account ID is auto-filled from the purchase receipt."}
+      </p>
+      {!isDemo && (
+        <label className="field">
+          <span>Account ID</span>
+          <input inputMode="numeric" value={accountIdInput} onChange={(event) => setAccountIdInput(event.target.value.replace(/\D/g, ""))} placeholder="Auto-filled after buy or enter manually" />
+        </label>
+      )}
       {lastHash && (
         <p className="helper">
           {receiptPending ? `${lastAction} pending: ` : `${lastAction} confirmed: `}

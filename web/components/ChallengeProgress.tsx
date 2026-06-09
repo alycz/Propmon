@@ -46,7 +46,7 @@ export function ChallengeProgress() {
         <Metric label="Entries" value={exam?.entryCount?.toString() ?? "--"} />
         <Metric label="Open positions" value={exam?.openPositions?.toString() ?? "--"} />
         <Metric label="Realized P&L" value={formatSignedQuote(exam?.realizedPnl)} accent={(exam?.realizedPnl ?? 0n) < 0n ? "neg" : (exam?.realizedPnl ?? 0n) > 0n ? "pos" : undefined} />
-        <Metric label="Result" value={failed ? "FAILED" : passed ? "PASSED" : "ACTIVE"} accent={failed ? "neg" : passed ? "pos" : undefined} />
+        <Metric label="Result" value={failed ? "Failed" : passed ? "Passed" : "Active"} accent={failed ? "neg" : passed ? "pos" : undefined} />
       </div>
     </Panel>
   );

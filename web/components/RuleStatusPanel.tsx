@@ -47,7 +47,7 @@ export function RuleStatusPanel() {
 }
 
 function RuleRow({name, detail, status}: {name: string; detail: string; status: "met" | "failed" | "active"}) {
-  const label = status === "met" ? "MET" : status === "failed" ? "FAILED" : "ACTIVE";
+  const label = status === "met" ? "Met" : status === "failed" ? "Failed" : "Active";
   const accent = status === "met" ? "pos" : status === "failed" ? "neg" : "warn";
   return (
     <div className="ruleRow">

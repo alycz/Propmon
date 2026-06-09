@@ -2,6 +2,11 @@ import {formatEther, formatUnits, parseUnits, type BaseError} from "viem";
 
 import {explorerBaseUrl} from "./config";
 
+export function titleCase(value: string | undefined): string {
+  if (!value) return "--";
+  return value.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
+}
+
 export function formatQuote(value: bigint | number | undefined, compact = false): string {
   if (value === undefined) return "--";
   const amount = typeof value === "bigint" ? Number(formatUnits(value, 6)) : value;
